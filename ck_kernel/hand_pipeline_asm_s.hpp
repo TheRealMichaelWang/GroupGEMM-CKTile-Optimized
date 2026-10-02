@@ -180,16 +180,25 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
         // stepping K costs 2 SALU ops instead of rebuilding two resources.
         const int32x4_t rsrc_a0 = make_wave_buffer_resource(a_ptr, a_bytes);
         const int32x4_t rsrc_b0 = make_wave_buffer_resource(b_ptr, b_bytes);
-        auto make_rsrc = [&](index_t kt) { return kt * (kK * 2); }; // soffset of K tile kt
+        // K tile kt of operand op: (resource, soffset). Tiles past the end (the pipeline's tail
+        // prefetches) get num_records = 0: no memory traffic, the LDS buffer just gets zeros.
+        struct Src { int32x4_t rsrc; index_t koff; };
+        auto make_src = [&](auto op, index_t kt, auto checked) {
+            Src src{op == 0 ? rsrc_a0 : rsrc_b0, kt * (kK * 2)};
+            if constexpr (checked)
+                if (kt >= num_loop)
+                    src.rsrc[2] = 0;
+            return src;
+        };
         // buf_off: byte offset of the destination tile buffer (a_base / b_base)
-        auto issue_load = [&](index_t koff, index_t buf_off, auto j, auto op) {
+        auto issue_load = [&](const Src &src, index_t buf_off, auto j, auto op) {
             __builtin_amdgcn_sched_barrier(0);
             const index_t dst = lds_base + buf_off + (j * 4 + wave) * 1024;
             m0_set_with_memory(dst);
             const index_t voff = op == 0 ? voff_a + j * 32 * lda * 2 : voff_b + j * 32 * ldb * 2;
             asm volatile("buffer_load_dwordx4 %1, %2, %3 offen lds"
                          : "=r"(p_smem) /* dummy dependency for smem */
-                         : "v"(voff), "s"(op == 0 ? rsrc_a0 : rsrc_b0), "s"(koff)
+                         : "v"(voff), "s"(src.rsrc), "s"(src.koff)
                          : "memory");
             __builtin_amdgcn_sched_barrier(0);
         };
@@ -220,18 +229,20 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
 
         // --- prologue: A0, B0 -> stage 0; B1 -> stage 1; pre-read B0 and A0 row 0; B2 -> stage 0.
         {
-            const auto r0 = make_rsrc(0), r1 = make_rsrc(min(index_t{1}, num_loop - 1));
-            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r0, a_base(0), j, number<0>{}); });
-            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r0, b_base(0), j, number<1>{}); });
-            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r1, b_base(1), j, number<1>{}); });
+            const auto a0 = make_src(number<0>{}, 0, false_type{});
+            const auto b0 = make_src(number<1>{}, 0, false_type{});
+            const auto b1 = make_src(number<1>{}, 1, true_type{});
+            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(a0, a_base(0), j, number<0>{}); });
+            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(b0, b_base(0), j, number<1>{}); });
+            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(b1, b_base(1), j, number<1>{}); });
         }
         block_sync_lds_direct_load<kLoads>(); // A0, B0 landed
         static_for<0, kNIter, 1>{}([&](auto i) { read_b(0, number<0>{}, i); });
         read_a(0, number<0>{});
         s_waitcnt_barrier<waitcnt_arg::kMaxVmCnt, waitcnt_arg::kMaxExpCnt, 0>(); // B0 read everywhere
         {
-            const auto r2 = make_rsrc(min(index_t{2}, num_loop - 1));
-            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r2, b_base(kB3 ? 2 : 0), j, number<1>{}); });
+            const auto b2 = make_src(number<1>{}, 2, true_type{});
+            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(b2, b_base(kB3 ? 2 : 0), j, number<1>{}); });
         }
 
         // One LDS read of a 16x32 fragment.
@@ -246,11 +257,12 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
         //   row 7    : wait A(kt+1) landed + barrier (also: all waves done reading A(kt) in s),
         //              then read A(kt+1) row 0 from stage s^1
         // t3 = kt % 3 (kB3 B buffer rotation), a compile-time constant like buf (loop unrolled x6)
-        auto iteration = [&](index_t kt, auto buf, auto first, auto t3) {
+        // checked: prefetches may run past the last K tile (only the tail iterations)
+        auto iteration = [&](index_t kt, auto buf, auto first, auto t3, auto checked) {
             constexpr index_t s = buf; // stage of tile kt (buf == kt % 2)
-            const auto rsrc_a = make_rsrc(min(kt + 1, num_loop - 1));
-            const auto rsrc_a2 = make_rsrc(min(kt + 2, num_loop - 1)); // early A(kt+2) loads
-            const auto rsrc_b = make_rsrc(min(kt + 3, num_loop - 1));
+            const auto rsrc_a  = make_src(number<0>{}, kt + 1, checked);
+            const auto rsrc_a2 = make_src(number<0>{}, kt + 2, checked); // early A(kt+2) loads
+            const auto rsrc_b  = make_src(number<1>{}, kt + 3, checked);
             const index_t a_cur = a_base(s), a_nxt = a_base(s ^ 1);
             // B(kt+1) is pre-read from b_nxt; B(kt+3) is loaded into b_wr
             constexpr index_t b_wr  = kB3 ? b_base(t3) : b_base(s ^ 1);
@@ -318,16 +330,17 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
         };
         // tile 0 peeled: its first K step initializes the accumulators (no zero fill)
         // tile kt uses buf = kt % 2 and t3 = kt % 3: unroll by 6 so both are constants
-        iteration(0, number<0>{}, true_type{}, number<0>{});
+        iteration(0, number<0>{}, true_type{}, number<0>{}, true_type{});
         index_t kt = 1;
-        for (; kt + 5 < num_loop; kt += 6) {
+        // main loop: all prefetches (up to kt + 5 + 3) are in range, no checks
+        for (; kt + 8 < num_loop; kt += 6) {
             static_for<1, 7, 1>{}([&](auto u) {
-                iteration(kt + u - 1, number<u % 2>{}, false_type{}, number<u % 3>{});
+                iteration(kt + u - 1, number<u % 2>{}, false_type{}, number<u % 3>{}, false_type{});
             });
         }
-        static_for<1, 6, 1>{}([&](auto u) { // up to 5 remaining tiles
+        static_for<1, 9, 1>{}([&](auto u) { // up to 8 remaining tiles
             if (kt + u - 1 < num_loop)
-                iteration(kt + u - 1, number<u % 2>{}, false_type{}, number<u % 3>{});
+                iteration(kt + u - 1, number<u % 2>{}, false_type{}, number<u % 3>{}, true_type{});
         });
         s_waitcnt_barrier<0, waitcnt_arg::kMaxExpCnt, 0>(); // drain before the epilogue uses LDS
 
