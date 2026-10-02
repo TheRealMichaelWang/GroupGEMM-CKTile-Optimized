@@ -28,6 +28,19 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
 
     static constexpr index_t kM = 256, kN = 256, kK = 64;
     static constexpr index_t kMIter = 8, kNIter = 8, kKH = 2;
+#ifndef TUNEMAX_BAR_IDX
+#define TUNEMAX_BAR_IDX 11
+#endif
+    // MFMA index in row 7 before which the end-of-tile barrier sits
+    static constexpr index_t kBarIdx = TUNEMAX_BAR_IDX;
+#ifndef TUNEMAX_A_PER_ROW
+#define TUNEMAX_A_PER_ROW 2
+#endif
+    static constexpr index_t kAPerRow = TUNEMAX_A_PER_ROW;
+#ifndef TUNEMAX_B_OFF
+#define TUNEMAX_B_OFF 1
+#endif
+    static constexpr index_t kBOff    = TUNEMAX_B_OFF; // B loads after MFMA kBOff and 8 + kBOff
     static_assert(Problem::BlockGemmShape::kM == kM && Problem::BlockGemmShape::kN == kN &&
                       Problem::BlockGemmShape::kK == kK,
                   "HandPipelineAsmS is written for 256x256x64");
@@ -168,34 +181,38 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
             const index_t a_cur = s * kStageBytes, a_nxt = (s ^ 1) * kStageBytes;
             const index_t b_nxt = (s ^ 1) * kStageBytes + kTileBytes;
             static_for<0, kMIter, 1>{}([&](auto mi) {
-                if constexpr (mi == 4)
-                    s_waitcnt_barrier<waitcnt_arg::kMaxVmCnt, waitcnt_arg::kMaxExpCnt, 0>();
-                if constexpr (mi == 7)
-                    s_waitcnt_barrier<6, waitcnt_arg::kMaxExpCnt, 0>();
                 static_for<0, kKH * kNIter, 1>{}([&](auto idx) {
                     constexpr index_t kh = idx / kNIter, ni = idx % kNIter;
+                    if constexpr (mi == 4 && idx == kBOff) // all waves done reading B(kt+1)
+                        s_waitcnt_barrier<waitcnt_arg::kMaxVmCnt, waitcnt_arg::kMaxExpCnt, 0>();
+                    if constexpr (mi == 7 && idx == kBarIdx) // loads of rows 4-6 + row 7 so far may fly
+                        s_waitcnt_barrier<6 + (kBarIdx > kBOff) + (kBarIdx > 8 + kBOff), waitcnt_arg::kMaxExpCnt, 0>();
                     mfma(acc[mi][ni], fa[mi % 2][kh], fb[buf][ni][kh]);
                     __builtin_amdgcn_sched_barrier(0);
                     // loads after MFMA 0 and 8
-                    if constexpr (idx % 8 == 0) {
-                        constexpr index_t ld = (mi % 4) * 2 + idx / 8;
-                        if constexpr (mi < 4)
-                            issue_load(rsrc_a, s ^ 1, number<ld>{}, number<0>{});
-                        else
-                            issue_load(rsrc_b, s ^ 1, number<ld>{}, number<1>{});
-                    }
+                    // A(kt+1): kAPerRow loads per row from row 0; B(kt+3): 2 per row in rows 4-7
+                    if constexpr (mi * kAPerRow < kLoads && idx % (16 / kAPerRow) == 0)
+                        issue_load(rsrc_a, s ^ 1, number<mi * kAPerRow + idx / (16 / kAPerRow)>{},
+                                   number<0>{});
+                    if constexpr (mi >= 4 && idx % 8 == kBOff)
+                        issue_load(rsrc_b, s ^ 1, number<(mi - 4) * 2 + idx / 8>{}, number<1>{});
                     // next A row (or next tile's row 0 in row 7) after MFMA 2 and 4
-                    if constexpr (idx == 2 || idx == 4) {
+                    // memory ops: loads after even MFMAs, LDS reads after odd ones
+                    if constexpr (mi + 1 < kMIter && (idx == 2 || idx == 4)) {
                         constexpr index_t kk = idx / 4;
-                        if constexpr (mi + 1 < kMIter)
-                            rd(fa[(mi + 1) % 2][kk], a_cur + a_off[kk] + (mi + 1) * 32 * kRowBytes);
-                        else
-                            rd(fa[0][kk], a_nxt + a_off[kk]);
+                        rd(fa[(mi + 1) % 2][kk], a_cur + a_off[kk] + (mi + 1) * 32 * kRowBytes);
+                        __builtin_amdgcn_sched_barrier(0);
+                    }
+                    if constexpr (mi == 7 && (idx == kBarIdx || idx == kBarIdx + 2)) {
+                        constexpr index_t kk = (idx - kBarIdx) / 2;
+                        rd(fa[0][kk], a_nxt + a_off[kk]);
                         __builtin_amdgcn_sched_barrier(0);
                     }
                     // rows 0-3: next tile's B, columns 2mi and 2mi+1, after MFMA 6, 10, 12, 14
-                    if constexpr (mi < 4 && (idx == 6 || idx == 10 || idx == 12 || idx == 14)) {
-                        constexpr index_t q  = idx == 6 ? 0 : (idx - 8) / 2; // 0..3
+                    // (row 3 earlier, so they are done by the barrier at the start of row 4)
+                    constexpr index_t q = mi < 3 ? (idx == 6 ? 0 : idx == 10 ? 1 : idx == 12 ? 2 : idx == 14 ? 3 : -1)
+                                                 : (idx == 1 ? 0 : idx == 3 ? 1 : idx == 5 ? 2 : idx == 6 ? 3 : -1);
+                    if constexpr (mi < 4 && q >= 0) {
                         constexpr index_t c = 2 * mi + q / 2, kk = q % 2;
                         rd(fb[1 - buf][c][kk], b_nxt + b_off[kk] + c * 32 * kRowBytes);
                         __builtin_amdgcn_sched_barrier(0);

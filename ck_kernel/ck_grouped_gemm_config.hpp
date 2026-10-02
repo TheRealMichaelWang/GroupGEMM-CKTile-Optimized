@@ -19,6 +19,7 @@
 #include "hand_pipeline_asm3.hpp"
 #include "hand_pipeline_asm_s.hpp"
 #include "coherence_epilogue.hpp"
+#include "fast_epilogue.hpp"
 
 namespace tunemax {
 
@@ -59,6 +60,8 @@ struct CkTileConfig {
     // Cache policy for C stores (coherence_epilogue.hpp): kStoreDefault, kStoreNT (non-temporal,
     // C is never re-read, like hipBLASLt's NTC/NTD), kStoreDeviceNT, kStoreSystemNT.
     static constexpr int CStoreMode = kStoreNT;
+    // FastEpilogue: our C epilogue for the hand pipelines (fast_epilogue.hpp), CStoreMode applies.
+    static constexpr bool FastEpilogue = true;
 
     // Async: global->LDS loads that bypass registers (gfx950). VectorSize: max global load
     // width in elements. DataCachePrefetch: ck_tile::DataCachePrefetchKind::None or others.

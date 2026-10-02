@@ -83,8 +83,16 @@ template <typename Cfg, typename DataType, bool Pad> struct CkGroupedGemm {
 
     using BaseEpilogue = std::conditional_t<Cfg::CShuffleEpilogue, CShuffleEpi, DefaultEpi>;
     // Optionally store C with a different cache policy (Cfg::CStoreCoherence).
-    using Epilogue = std::conditional_t<Cfg::CStoreMode == kStoreDefault, BaseEpilogue,
-                                        CoherenceEpilogue<BaseEpilogue, Cfg::CStoreMode>>;
+    using CkEpilogue = std::conditional_t<Cfg::CStoreMode == kStoreDefault, BaseEpilogue,
+                                          CoherenceEpilogue<BaseEpilogue, Cfg::CStoreMode>>;
+    // FastEpilogue (fast_epilogue.hpp): for the hand pipelines (exposes Pipeline::BlockGemm).
+    using Epilogue = typename decltype([] {
+        if constexpr (Cfg::FastEpilogue)
+            return std::type_identity<
+                FastEpilogue<BaseEpilogue, Cfg::CStoreMode, Pad>>{};
+        else
+            return std::type_identity<CkEpilogue>{};
+    }())::type;
 
     using Kernel = ck_tile::GroupedGemmKernel<TilePartitioner, Pipeline, Epilogue>;
 
