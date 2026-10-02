@@ -13,6 +13,14 @@
 #include "ck_tile/core.hpp"
 #include "ck_tile/ops/gemm.hpp"
 
+// Lane id via volatile asm: values derived from it are recomputed in each call instead of
+// being hoisted out of the persistent kernel's tile loop (where they would be spilled).
+CK_TILE_DEVICE int tunemax_lane_id() {
+    int l;
+    asm volatile("v_mbcnt_lo_u32_b32 %0, -1, 0\n\tv_mbcnt_hi_u32_b32 %0, -1, %0" : "=v"(l));
+    return l;
+}
+
 namespace ck_tile::tunemax_hand {
 
 template <typename Problem>
@@ -114,7 +122,7 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
               std::enable_if_t<!is_detected<is_tuple, ADramWindow>::value, bool> = true>
     CK_TILE_DEVICE auto operator()(const ADramWindow &a_win, const BDramWindow &b_win,
                                    index_t num_loop, void *p_smem) const {
-        const index_t lane = threadIdx.x % 64;
+        const index_t lane = tunemax_lane_id(); // volatile: recomputed per tile, not spilled
         const index_t wave = __builtin_amdgcn_readfirstlane(threadIdx.x / 64);
         const index_t wm = wave / 2, wn = wave % 2;
 

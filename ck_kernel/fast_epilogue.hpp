@@ -46,7 +46,7 @@ struct FastEpilogue : public BaseEpilogue {
                 uniform_sequence_gen_t<c_warp_y_lengths.size(), 0>{};
             using F4 = ext_vector_t<float, 4>;
 
-            const index_t lane = threadIdx.x % 64;
+            const index_t lane = tunemax_lane_id(); // volatile: recomputed per tile, not spilled
             const index_t wave = __builtin_amdgcn_readfirstlane(threadIdx.x / 64);
             const index_t wm = wave / 2, wn = wave % 2;
             const index_t j  = lane % 4; // position in the lane quad
