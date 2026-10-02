@@ -96,3 +96,17 @@ Tools: `scripts/quick.sh` (bf16-only tuning build, ~15 s + ~5 s run), `QUICK_ONL
 - 8-warp CompAsync + XOR at K=64: spills 547 VGPRs (~130 TF). Eight-wave pipeline with 2x2 warps:
   wrong results, ~800 TF.
 - Eight-wave + 32x32x16 MFMA: 48% LDS bank conflicts with CK's policy (swizzle factor 2). Our policy copy (eight_wave_policy_swizzled.hpp, factor 8) removes them (0%) but gives wrong results and no speedup (~1337 either way) -> conflicts are not its limiter. Not used.
+
+## Round 4 (2026-10-02): hand-written pipeline (HIP intrinsics + CK primitives, CK unmodified)
+`ck_kernel/hand_pipeline_k32.hpp` (pipeline HAND32, 256x256x32, 2x2 warps, 4 LDS stages) and
+`hand_pipeline.hpp` (HAND, 256x256x64, 2 stages). Both pass the correctness check.
+- HAND (K64, 2 stages): ~1110 (loads in a burst stall the vector-memory queue, 35%); interleaving
+  the loads leaves too little slack before use (vmcnt waits 38%) -> ~1035-1076.
+- HAND32 (K32, 4 stages, loads 3 tiles ahead spread over the MFMAs): ~1180-1200.
+  LDS traffic = hipBLASLt level (1.55e10 vs 1.47e10 active), bank conflicts 3%, but MFMA busy/CU
+  busy = 2.40 (60%) vs hipBLASLt 3.40 (85%); runs at 2064 MHz at the 1400 W cap.
+  Remaining stalls: load issue ~9-15%, waits ~7%, barriers ~5%, non-MFMA issue overhead.
+- Lessons: `using Base::operator()` silently selected CK's V3 loop; generic->int->LDS pointer casts
+  give flat loads (use a C-style address-space cast); amd_async_buffer_load lowered to load+ds_write
+  here (use m0_set_with_memory + async_buffer_load_dwordxn_v); branches around MFMA blocks cause
+  massive spills (keep the loop body branch-free, clamp the tail).

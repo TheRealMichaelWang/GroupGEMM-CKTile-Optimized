@@ -86,16 +86,22 @@ struct HandPipelineK32 : public GemmPipelineAgBgCrCompV3<Problem> {
         const index_t ld_chunk = (lane % 4) ^ ((lane / 8) % 4);
         const index_t voff_a   = ((wave * 16 + ld_row) * lda + ld_chunk * 8) * 2;
         const index_t voff_b   = ((wave * 16 + ld_row) * ldb + ld_chunk * 8) * 2;
-        auto issue_load_pair = [&](index_t kt, index_t stage, auto j) {
+        // One buffer descriptor per operand per K tile; row group j is a VGPR offset.
+        auto make_rsrc = [&](index_t kt) {
+            return make_tuple(make_wave_buffer_resource(a_ptr + kt * kK, 0x7ffff000),
+                              make_wave_buffer_resource(b_ptr + kt * kK, 0x7ffff000));
+        };
+        auto issue_load_pair_r = [&](const auto &rsrc, index_t stage, auto j) {
             __builtin_amdgcn_sched_barrier(0);
-            const auto ra = make_wave_buffer_resource(a_ptr + kt * kK + j * 64 * lda, 0x7ffff000);
-            const auto rb = make_wave_buffer_resource(b_ptr + kt * kK + j * 64 * ldb, 0x7ffff000);
             const index_t dst = lds_base + stage * kStageBytes + (j * 4 + wave) * 1024;
             m0_set_with_memory(dst);
-            async_buffer_load_dwordxn_v<4>(p_smem, ra, voff_a, 0, 0);
+            async_buffer_load_dwordxn_v<4>(p_smem, rsrc[number<0>{}], voff_a + j * 64 * lda * 2, 0, 0);
             m0_set_with_memory(dst + kTileBytes);
-            async_buffer_load_dwordxn_v<4>(p_smem, rb, voff_b, 0, 0);
+            async_buffer_load_dwordxn_v<4>(p_smem, rsrc[number<1>{}], voff_b + j * 64 * ldb * 2, 0, 0);
             __builtin_amdgcn_sched_barrier(0);
+        };
+        auto issue_load_pair = [&](index_t kt, index_t stage, auto j) {
+            issue_load_pair_r(make_rsrc(kt), stage, j);
         };
         auto issue_tile = [&](index_t kt, index_t stage) {
             static_for<0, kLoads, 1>{}([&](auto j) { issue_load_pair(kt, stage, j); });
@@ -150,12 +156,19 @@ struct HandPipelineK32 : public GemmPipelineAgBgCrCompV3<Problem> {
             const index_t s_next = (kt + 1) % kStages;
             const index_t s_load = (kt + 3) % kStages;
             const index_t kt_load = min(kt + 3, num_loop - 1);
+            const auto rsrc_load  = make_rsrc(kt_load);
             static_for<0, kMIter, 1>{}([&](auto mi) {
-                // spread next-tile fragment reads and the 4+4 loads of tile kt+3 over the rows
-                read_a(s_next, number<1 - buf>{}, mi);
-                read_b(s_next, number<1 - buf>{}, mi);
+                // Next-tile fragments: all 8 B frags in rows 0-3 (row 0 of the next tile needs
+                // every B frag), A frag i in rows 4-7 (only needed at row i of the next tile).
+                if constexpr (mi < 4) {
+                    read_b(s_next, number<1 - buf>{}, number<2 * mi>{});
+                    read_b(s_next, number<1 - buf>{}, number<2 * mi + 1>{});
+                } else {
+                    read_a(s_next, number<1 - buf>{}, number<2 * (mi - 4)>{});
+                    read_a(s_next, number<1 - buf>{}, number<2 * (mi - 4) + 1>{});
+                }
                 if constexpr (mi % 2 == 0)
-                    issue_load_pair(kt_load, s_load, number<mi / 2>{});
+                    issue_load_pair_r(rsrc_load, s_load, number<mi / 2>{});
                 mfma_row(buf, mi);
             });
         };
