@@ -134,37 +134,47 @@ struct HandPipelineAsm : public GemmPipelineAgBgCrCompV3<Problem> {
             });
         };
 
-        // --- prologue: tiles 0 and 1 (A and B) in flight; tile 0's B in registers.
-        issue_tile(0, 0);
-        issue_tile(min(index_t{1}, num_loop - 1), 1);
-        block_sync_lds_direct_load<2 * kLoads>(); // tile 0 landed
+        // --- prologue: A0, B0 -> stage 0; B1 -> stage 1; pre-read B0; then B2 -> stage 0.
+        {
+            const auto r0 = make_rsrc(0), r1 = make_rsrc(min(index_t{1}, num_loop - 1));
+            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r0, 0, j, number<0>{}); });
+            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r0, 0, j, number<1>{}); });
+            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r1, 1, j, number<1>{}); });
+        }
+        block_sync_lds_direct_load<kLoads>(); // A0, B0 landed
         static_for<0, kNIter, 1>{}([&](auto i) { read_b(0, number<0>{}, i); });
+        s_waitcnt_barrier<waitcnt_arg::kMaxVmCnt, waitcnt_arg::kMaxExpCnt, 0>(); // B0 read everywhere
+        {
+            const auto r2 = make_rsrc(min(index_t{2}, num_loop - 1));
+            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r2, 0, j, number<1>{}); });
+        }
 
-        // Iteration kt, stage s = kt % 2:
-        //   start: A(kt) and B(kt+1) landed (issued last iteration), LDS reads done; barrier
-        //   loads: B(kt+2) -> stage s (B(kt) was pre-read last iteration),
-        //          A(kt+1) -> stage s^1 (A(kt-1) was read just-in-time last iteration)
-        //   rows: A(kt) rows read just in time from stage s; B(kt+1) pre-read from stage s^1.
+        // Iteration kt, stage s = kt % 2. Issue order: A(kt+1) in rows 0-1, B(kt+3) in rows 4-7.
+        //   start    : vmcnt(8): A(kt), B(kt+1) landed, B(kt+2) may fly; LDS reads done; barrier
+        //   rows 0-3 : pre-read B(kt+1) (stage s^1); A(kt) rows read just in time (stage s)
+        //   after r3 : barrier (all waves done reading B(kt+1)) -> stage s^1's B half is free
+        //   rows 4-7 : B(kt+3) -> stage s^1 (needed ~1.5 tiles later)
         auto iteration = [&](index_t kt, auto buf) {
-            s_waitcnt_barrier<0, waitcnt_arg::kMaxExpCnt, 0>();
+            s_waitcnt_barrier<kLoads, waitcnt_arg::kMaxExpCnt, 0>();
             const index_t s    = kt & 1;
-            const auto rsrc_b  = make_rsrc(min(kt + 2, num_loop - 1));
             const auto rsrc_a  = make_rsrc(min(kt + 1, num_loop - 1));
+            const auto rsrc_b  = make_rsrc(min(kt + 3, num_loop - 1));
             read_a(s, number<0>{});
             static_for<0, kMIter, 1>{}([&](auto mi) {
+                if constexpr (mi == 4)
+                    s_waitcnt_barrier<waitcnt_arg::kMaxVmCnt, waitcnt_arg::kMaxExpCnt, 0>();
                 if constexpr (mi + 1 < kMIter)
                     read_a(s, number<mi + 1>{}); // next row, just in time
                 static_for<0, kKH, 1>{}([&](auto kh) {
                     static_for<0, kNIter, 1>{}([&](auto ni) {
                         mfma(acc[mi][ni], fa[mi % 2][kh], fb[buf][ni][kh]);
-                        // rows 0-3: 16 async loads (B of kt+2, A of kt+1), one per 4 MFMAs
                         constexpr index_t idx = kh * kNIter + ni;
-                        if constexpr (mi < 4 && idx % 4 == 0) {
-                            constexpr index_t ld = mi * 4 + idx / 4; // 0..15
-                            if constexpr (ld % 2 == 0)
-                                issue_load(rsrc_b, s, number<ld / 2>{}, number<1>{});
+                        if constexpr (idx % 8 == 0) { // 2 loads per row
+                            constexpr index_t ld = (mi % 4) * 2 + idx / 8; // 0..7
+                            if constexpr (mi < 4)
+                                issue_load(rsrc_a, s ^ 1, number<ld>{}, number<0>{});
                             else
-                                issue_load(rsrc_a, s ^ 1, number<ld / 2>{}, number<0>{});
+                                issue_load(rsrc_b, s ^ 1, number<ld>{}, number<1>{});
                         }
                     });
                 });
