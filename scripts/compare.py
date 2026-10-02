@@ -10,8 +10,9 @@ for p in paths:
         by.setdefault(int(r["TestID"]), {})[r["Backend"]] = r
 other = "hipblaslt_loop"
 pairs = [(i, d["ck_tile"], d[other]) for i, d in sorted(by.items())
-         if "ck_tile" in d and other in d and d["ck_tile"]["Check"] == "PASS" and d[other]["Check"] == "PASS"]
-bad = [i for i, d in by.items() if any(x["Check"] not in ("PASS",) for x in d.values())]
+         if "ck_tile" in d and other in d and d["ck_tile"]["Check"] == "PASS"
+         and d[other]["Check"] in ("PASS", "SKIP")]  # SKIP: baseline timed with --no-check
+bad = [i for i, d in by.items() if any(x["Check"] not in ("PASS", "SKIP") for x in d.values())]
 n = len(pairs)
 wins = sum(float(c["TFLOPS"]) > float(h["TFLOPS"]) for _, c, h in pairs)
 geo = math.exp(sum(math.log(float(h["Time_ms"]) / float(c["Time_ms"])) for _, c, h in pairs) / n)
