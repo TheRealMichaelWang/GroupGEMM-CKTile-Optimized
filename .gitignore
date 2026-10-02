@@ -2,3 +2,4 @@ build/
 results/
 __pycache__/
 .rocprofv3/
+build_full/

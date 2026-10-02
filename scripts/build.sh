@@ -6,10 +6,10 @@
 #   scripts/build.sh --full     # every dtype/padding instance (for full runs, fp16)
 #   scripts/build.sh --clean    # wipe build/ and reconfigure
 #
-# Env overrides: CK_ROOT (CK source checkout), GPU_TARGETS (default gfx950).
+# Env overrides: CK_ROOT (CK source checkout), GPU_TARGETS (default gfx950), BUILD_DIR.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-BUILD="$ROOT/build"
+BUILD="${BUILD_DIR:-$ROOT/build}"   # BUILD_DIR: e.g. a separate full build next to the tuning build
 
 tuning=ON   # default: fast tuning build (bf16 unpadded CK kernel only)
 for arg in "$@"; do
