@@ -110,3 +110,10 @@ Tools: `scripts/quick.sh` (bf16-only tuning build, ~15 s + ~5 s run), `QUICK_ONL
   give flat loads (use a C-style address-space cast); amd_async_buffer_load lowered to load+ds_write
   here (use m0_set_with_memory + async_buffer_load_dwordxn_v); branches around MFMA blocks cause
   massive spills (keep the loop body branch-free, clamp the tail).
+- HAND32 + sched_group_barrier (MFMA, DS read alternation): ~1227 TF, MFMA busy 63% at 2021 MHz.
+  Trace: async load issue ~18% of wave time (~37 cycles/load): K=32 rows are 64 B, so every
+  load touches 16 half-used cache lines (K=64 rows: 8 full lines).
+- RING (K=64, 2 LDS stages, A fragment ring + double-buffered B = hipBLASLt's register-as-third-
+  buffer scheme): correct, but needs ~448 registers; compiler uses all 512 + 104 B scratch and 84
+  AGPR<->VGPR moves per loop -> ~600 TF. Single-buffered B fits but frees the LDS stage only
+  mid-tile (= HAND, ~1035-1110).
