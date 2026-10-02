@@ -72,3 +72,18 @@ Tools: `scripts/quick.sh` (bf16-only tuning build, ~15 s + ~5 s run), `QUICK_ONL
 `scripts/asm_loop.py` (hot-loop instruction mix), `scripts/flags.sh "<flags>"`.
 - amdgpu_num_vgpr(N) on our own entry kernel: caps the TOTAL VGPR+AGPR budget (128 -> 256 VGPR/0 AGPR, occupancy 2, scratch spills, ~800 TF); 192 ignored. Cannot force hipBLASLt-style 120 VGPR / 384 AGPR split this way.
 - Non-temporal C stores (ck_kernel/coherence_epilogue.hpp, CStoreMode=kStoreNT): 1394 -> ~1412 top3 mean (59: 1438). Enum values differ host vs device, so the mode is a plain int.
+
+## Round 3 (2026-10-02): diagnosis with thread trace (scripts/att_summary.py)
+- gfx950 LDS ground truth (microbenchmark): ds_read_b128 is conflict-free iff each 8-lane group
+  covers distinct 16B slots of a 128B window. Plain 64B bf16 rows -> 2-way (50%); 128B rows -> 4-way.
+  Conflict-free: chunk ^ ((row/2)%4) for 64B rows, chunk ^ (row%8) for 128B rows.
+  `swizzled_lds_policy.hpp` (V3/V4 register-staged) and `xor_async_policy.hpp` (async, swizzles the
+  global side) implement it; the async kernel went to 0% conflicts - but no speedup.
+- LDS read bandwidth measured ~180-210 B/clk/CU, so the 8-wave kernel is NOT LDS-bound.
+- Thread trace, Kimi shape: CK 8-wave stalls = 33% MFMA, 28% s_waitcnt vmcnt (async loads),
+  18% barriers. hipBLASLt = 71% MFMA, <6% waits. The 8-wave ping-pong issues each async load only
+  one phase (~1000 cycles) before use; global latency at the power-capped clock exceeds that.
+  Deeper prefetch needs more LDS buffers than fit at K=64 (3x64 KB > 160 KB).
+- 4-wave 256x256 kernels (CompV3/CompAsync, with/without swizzle): register-starved (all 512 regs,
+  ~50 AGPR<->VGPR moves per 128 MFMAs) -> 47-62% MFMA utilization, 1000-1180 TFLOPS.
+- 8-warp CompAsync (4x2, Default epilogue) is correct but ~1000-1050. Persistent + XCD remap: 1379.

@@ -29,20 +29,29 @@ template <int Mode> CK_TILE_DEVICE constexpr ck_tile::amd_buffer_coherence_enum 
     return ck_tile::amd_buffer_coherence_enum::coherence_default;
 }
 
+// Same window (pointer, descriptor, lengths, origin) with another cache policy. Works for
+// plain (undistributed) tile windows such as the A/B/C block windows the GEMM kernel builds.
+template <int Mode, typename Window> CK_TILE_DEVICE auto with_store_mode(const Window &window) {
+    if constexpr (Mode == kStoreDefault) {
+        return window;
+    } else {
+        const auto &view = window.get_bottom_tensor_view();
+        using View       = ck_tile::remove_cvref_t<decltype(view)>;
+        auto new_view    = ck_tile::make_tensor_view<ck_tile::address_space_enum::global,
+                                                     View::DstInMemOp, store_coherence<Mode>(),
+                                                     View::LargeTensor>(
+            view.get_buffer_view().p_data_, view.get_tensor_descriptor());
+        return ck_tile::make_tile_window(new_view, window.get_window_lengths(),
+                                         window.get_window_origin());
+    }
+}
+
 template <typename BaseEpilogue, int Mode>
 struct CoherenceEpilogue : public BaseEpilogue {
     template <typename CWindow, typename CTile, typename DWindows>
     CK_TILE_DEVICE auto operator()(CWindow &c_window, const CTile &c_tile,
                                    const DWindows &d_windows, void *smem) {
-        const auto &view = c_window.get_bottom_tensor_view();
-        using View       = ck_tile::remove_cvref_t<decltype(view)>;
-        auto *p_c        = view.get_buffer_view().p_data_;
-        auto  c_view     = ck_tile::make_tensor_view<ck_tile::address_space_enum::global,
-                                                     View::DstInMemOp, store_coherence<Mode>(),
-                                                     View::LargeTensor>(p_c,
-                                                                       view.get_tensor_descriptor());
-        auto c_win = ck_tile::make_tile_window(c_view, c_window.get_window_lengths(),
-                                               c_window.get_window_origin());
+        auto c_win = with_store_mode<Mode>(c_window);
         return BaseEpilogue::operator()(c_win, c_tile, d_windows, smem);
     }
 };

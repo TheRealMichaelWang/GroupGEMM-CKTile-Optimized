@@ -17,10 +17,11 @@
 
 #include "ck_tile/core.hpp"
 #include "ck_tile/ops/gemm.hpp"
+#include "coherence_epilogue.hpp"
 
 namespace tunemax {
 
-template <typename Problem>
+template <typename Problem, int AMode = kStoreDefault, int BMode = kStoreDefault>
 struct GroupedEightWavePipeline : public ck_tile::GemmPipelineAgBgCrCompAsyncEightWaves<Problem> {
     using Base = ck_tile::GemmPipelineAgBgCrCompAsyncEightWaves<Problem>;
 
@@ -35,9 +36,10 @@ struct GroupedEightWavePipeline : public ck_tile::GemmPipelineAgBgCrCompAsyncEig
                                bool> = true>
     CK_TILE_DEVICE auto operator()(const ADramWindow &a_window, const BDramWindow &b_window,
                                    ck_tile::index_t num_loop, void *p_smem) const {
-        return Base::operator()(ck_tile::make_tuple(a_window),
+        // Optional cache policy for the A/B loads (same helper as the C stores).
+        return Base::operator()(ck_tile::make_tuple(with_store_mode<AMode>(a_window)),
                                 ck_tile::element_wise::PassThrough{},
-                                ck_tile::make_tuple(b_window),
+                                ck_tile::make_tuple(with_store_mode<BMode>(b_window)),
                                 ck_tile::element_wise::PassThrough{}, num_loop, p_smem);
     }
 };

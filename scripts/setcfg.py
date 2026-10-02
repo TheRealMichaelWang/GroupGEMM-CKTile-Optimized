@@ -9,8 +9,12 @@ for k,v in [("M_Tile",MT),("N_Tile",NT),("K_Tile",KT),("M_Warp",MW),("N_Warp",NW
 pmap = {k:"ck_tile::"+v for k,v in {"V3":"GemmPipelineAgBgCrCompV3","V4":"GemmPipelineAgBgCrCompV4","MEM":"GemmPipelineAgBgCrMem","ASYNC":"GemmPipelineAgBgCrCompAsync","EW":"GemmPipelineAgBgCrCompAsyncEightWaves","PS":"WeightPreshufflePipelineAGmemBGmemCRegV2"}.items()}
 pmap["EWG"]="tunemax::GroupedEightWavePipeline"
 pmap["AX"]="tunemax::AsyncXorPipeline"
+pmap["V3S"]="tunemax::CompV3Swizzled"
+pmap["V4S"]="tunemax::CompV4Swizzled"
+pmap["V3S1"]="tunemax::CompV3Swizzled128"
+pmap["V4S1"]="tunemax::CompV4Swizzled128"
 s = re.sub(r"(using Pipeline = )[\w:]+<Problem>", rf"\g<1>{pmap[pipe]}<Problem>", s)
-s = re.sub(r"DoubleSmemBuffer = \w+;", f"DoubleSmemBuffer = {'true' if pipe in ('V4','ASYNC','PS','AX') else 'false'};", s)
+s = re.sub(r"DoubleSmemBuffer = \w+;", f"DoubleSmemBuffer = {'true' if pipe in ('V4','ASYNC','PS','AX','V4S','V4S1') else 'false'};", s)
 s = re.sub(r"GemmPipelineScheduler::\w+;", f"GemmPipelineScheduler::{sched};", s)
 s = re.sub(r"kBlockPerCu = \d+;", f"kBlockPerCu = {bpc};", s)
 s = re.sub(r"bool Persistent = \w+;", f"bool Persistent = {pers};", s)
