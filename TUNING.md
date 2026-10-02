@@ -1,0 +1,72 @@
+# Tuning log
+
+Quick loop: `scripts/quick.sh` (rebuild, print spills/occupancy, CK only on top3, 20 iters).
+Sweep: `echo "MT NT KT MW NW MWT NWT KWT PIPE [Sched] [BlocksPerCU] [Persistent]" | scripts/sweep.sh`
+(PIPE = V3 | V4 | MEM | ASYNC | EW). Appends to `results/sweep.log`. It edits
+`ck_kernel/ck_grouped_gemm_config.hpp` in place, so reset it to the best afterwards.
+
+Target: beat hipblaslt_loop on top3 bf16 (~1430 TFLOPS avg, 100 iters). Goal 1500-1800.
+
+## Results so far (top3 bf16, mean TFLOPS, CK only)
+
+| Config (tile / warps / MFMA / pipeline / mode) | TFLOPS | Note |
+|---|---|---|
+| 256x256x64 / 2x2 / 32x32x16 / V3 / persistent | ~100 | spills 386-728 VGPRs |
+| 128x128x64 / 2x2 / 32x32x16 / V3 / persistent | ~900 | CK example default |
+| same, 2 blocks per CU | ~600 | worse |
+| 128x128x64 / 2x2 / 16x16x32 / V3 / persistent | ~940 | |
+| 256x256x64 / 2x4 / 16x16x32 / V3 / persistent | ~250 | spills, **wrong results** |
+| 256x128x64 / 2x2 / 16x16x32 / V3 / persistent | ~860 | |
+| 256x256x32 / 2x2 / 32x32x16 / V4 (CK ComputeV4) | ~170 | spills |
+| 256x256x32 / 2x2 / 16x16x32 / V4 / persistent | ~925 | spills 64 |
+| 128x128x64 + `Async=true` on V3 | ~500-900 | **wrong results**, don't use |
+| CompAsyncEightWaves 192x256x64 / 4x2 | n/a | doesn't compile with GroupedGemmKernel (needs HasHotLoop, GetVectorSizeC) |
+| 128x128x64 / 2x2 / 16x16x32 / V3 / **non-persistent** | ~1100 | non-persistent is a big win |
+| 256x256x32 / 2x2 / 16x16x32 / V3 / non-persistent | **~1170** | **current best** |
+| 256x256x64 / 2x2 / 16x16x32 / V3 / non-persistent | ~955 | |
+| 256x192x32, 256x128x32, 128x256x64 (V3 non-persistent) | 855-930 | |
+| V4 / ASYNC variants non-persistent | 680-1050 | |
+| TilePartitioner GroupNum/M01 (4/4, 16/4, 8/8, 8/2) | 1106-1118 | default 8/4 best |
+| dropping CK's -mllvm flags | 1170 vs 1142 | kept only -O3 -fno-offload-uniform-block |
+
+## What hipBLASLt runs (TestID 59)
+`MT256x320x64_MI16x16x1`, 256 threads (4 waves, 1 per SIMD), LDS 144 KB,
+128 VGPR + 384 AGPR, no spills. Tiles over (N=6144) x (tokens). So: bigger tile than CK
+can currently fit, accumulators held in AGPRs, deep LDS buffering.
+
+## Ideas not yet tried
+- Custom grouped kernel around CompAsyncEightWaves (8 waves, 192x256) - it's CK's
+  highest-throughput 16-bit path but not wired into GroupedGemmKernel.
+- Custom pipeline policy (our own Policy class for V3): LDS layout/padding, larger
+  prefetch depth, so a 256x256x64 or 256x320 tile fits in registers.
+- Swap A/B roles (compute out^T, tile tokens x N like hipBLASLt).
+
+## Round 2 (2026-10-02) - LOCKED CONFIG: use this for every shape
+
+`ck_kernel/ck_grouped_gemm_config.hpp`: CK eight-wave async ping-pong pipeline
+(`tunemax::GroupedEightWavePipeline`, adapter in `ck_kernel/eight_wave_pipeline.hpp`),
+256x256x64, 4x2 warps, 16x16x32, CShuffle epilogue, non-persistent, GroupNum 8 / M01 4.
+
+Top3 bf16, 100 iters, hipblaslt_loop run first: ck_tile 1405 vs hipblaslt_loop 1419 mean TFLOPS
+(TestID 59/71: CK ties or wins; 323 Kimi N=4096: hipBLASLt ~1480 vs CK ~1375).
+
+Key facts found:
+- Both kernels hit the MI355X 1400 W power cap (CK ~1725 MHz, hipBLASLt ~1650 MHz), so
+  TFLOPS = energy efficiency. Check with `python3 scripts/power.py` while a run is going
+  (pick the busiest GPU; HIP device 0 is amd-smi GPU 3 here).
+- CK's eight-wave kernel uses ~45% more LDS cycles than hipBLASLt (per-wave tile 64x128 vs
+  128x128/128x160). That is the remaining structural gap; 256x256x64 is the largest tile the
+  eight-wave pipeline fits (320x256 spills 1100 VGPRs, 256x384 violates its layout asserts).
+- Any 8-warp config with CompV3/Mem gives wrong results on gfx9 (CK's CShuffle epilogue and
+  V3 hard-code the eight-wave layout when M_Warp*N_Warp == 8). Use only the eight-wave pipeline.
+- Did not help: compiler flags (MFMA VGPR/AGPR form, CK's -mllvm set), XCD remap partitioner
+  (`XcdRemap`, no change in L2 misses), VectorSize, DataCachePrefetch, persistent mode,
+  K_Tile 32/128, 2 blocks/CU, weight-preshuffle pipeline (~700 TF), 4-wave CompAsync
+  (~1060; 50% LDS bank conflicts, XOR policy in `xor_async_policy.hpp` didn't remove them).
+
+Remaining idea (large effort): a 4-wave pipeline with 128x128+ per-wave tiles that keeps
+the MFMA pipes busy at 1 wave/SIMD - i.e. what hipBLASLt's hand-scheduled kernel does.
+
+Tools: `scripts/quick.sh` (bf16-only tuning build, ~15 s + ~5 s run), `QUICK_ONLY=323`,
+`scripts/build.sh --full` before full runs or fp16, `scripts/pmc.sh BACKEND` (counters),
+`scripts/asm_loop.py` (hot-loop instruction mix), `scripts/flags.sh "<flags>"`.
