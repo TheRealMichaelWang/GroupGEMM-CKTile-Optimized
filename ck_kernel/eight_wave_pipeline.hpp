@@ -18,10 +18,12 @@
 #include "ck_tile/core.hpp"
 #include "ck_tile/ops/gemm.hpp"
 #include "coherence_epilogue.hpp"
+#include "eight_wave_custom.hpp"
 
 namespace tunemax {
 
-template <typename Problem, int AMode = kStoreDefault, int BMode = kStoreDefault>
+template <typename Problem, int AMode = kStoreDefault, int BMode = kStoreDefault,
+          ck_tile::index_t RelaxA = -1>
 struct GroupedEightWavePipeline : public ck_tile::GemmPipelineAgBgCrCompAsyncEightWaves<Problem> {
     using Base = ck_tile::GemmPipelineAgBgCrCompAsyncEightWaves<Problem>;
 
@@ -36,6 +38,21 @@ struct GroupedEightWavePipeline : public ck_tile::GemmPipelineAgBgCrCompAsyncEig
                                bool> = true>
     CK_TILE_DEVICE auto operator()(const ADramWindow &a_window, const BDramWindow &b_window,
                                    ck_tile::index_t num_loop, void *p_smem) const {
+        if constexpr (RelaxA >= 0) {
+            // Our copy of the ping-pong loop (eight_wave_custom.hpp); same run-time
+            // hot-loop / tail dispatch as CK's tuple overload.
+            using Sched = ck_tile::BaseGemmPipelineAgBgCrCompV3<Problem, true>;
+            using Impl  = CustomEightWavesImpl<Problem, ck_tile::GemmPipelineAgBgCrCompAsyncEightWavesPolicy,
+                                               RelaxA>;
+            const auto a = with_store_mode<AMode>(a_window);
+            const auto b = with_store_mode<BMode>(b_window);
+            const auto run = [&](auto hot_loop_, auto tail_num_) {
+                return Impl{}.template Run_<hot_loop_.value, tail_num_.value>(
+                    p_smem, num_loop, a, b, []() { __builtin_amdgcn_sched_barrier(0); });
+            };
+            return Sched::TailHandler(run, Sched::BlockHasHotloop(num_loop),
+                                      Sched::GetBlockLoopTailNum(num_loop));
+        }
         // Optional cache policy for the A/B loads (same helper as the C stores).
         return Base::operator()(ck_tile::make_tuple(with_store_mode<AMode>(a_window)),
                                 ck_tile::element_wise::PassThrough{},

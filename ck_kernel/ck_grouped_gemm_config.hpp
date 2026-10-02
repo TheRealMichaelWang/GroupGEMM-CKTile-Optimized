@@ -11,6 +11,7 @@
 #include "eight_wave_pipeline.hpp"
 #include "xor_async_policy.hpp"
 #include "swizzled_lds_policy.hpp"
+#include "swizzled_lds_policy.hpp"
 #include "coherence_epilogue.hpp"
 
 namespace tunemax {

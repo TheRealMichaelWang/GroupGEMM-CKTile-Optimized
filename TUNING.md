@@ -87,3 +87,4 @@ Tools: `scripts/quick.sh` (bf16-only tuning build, ~15 s + ~5 s run), `QUICK_ONL
 - 4-wave 256x256 kernels (CompV3/CompAsync, with/without swizzle): register-starved (all 512 regs,
   ~50 AGPR<->VGPR moves per 128 MFMAs) -> 47-62% MFMA utilization, 1000-1180 TFLOPS.
 - 8-warp CompAsync (4x2, Default epilogue) is correct but ~1000-1050. Persistent + XCD remap: 1379.
+- Our copy of the eight-wave loop (ck_kernel/eight_wave_custom.hpp, generated from CK) reproduces CK exactly (RelaxA=0). Relaxing the end-of-phase A wait (RelaxA=4/8) stays correct but gains <=1% (1397-1409): the wait just moves to the next vmcnt(0) barrier. Deeper prefetch needs more LDS stages than fit at 256x256x64; at K=32 (4 stages fit) the 2x barriers cost more (EW K32 = 1145).
