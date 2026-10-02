@@ -17,6 +17,9 @@ pmap["HAND"]="tunemax::HandPipeline"
 pmap["HAND32"]="tunemax::HandPipelineK32"
 pmap["RING"]="tunemax::HandPipelineRing"
 pmap["ASM"]="tunemax::HandPipelineAsm"
+pmap["ASM32"]="tunemax::HandPipelineAsm32"
+pmap["ASM3"]="tunemax::HandPipelineAsm3"
+pmap["ASMS"]="tunemax::HandPipelineAsmS"
 s = re.sub(r"(using Pipeline = )[\w:]+<Problem>", rf"\g<1>{pmap[pipe]}<Problem>", s)
 s = re.sub(r"DoubleSmemBuffer = \w+;", f"DoubleSmemBuffer = {'true' if pipe in ('V4','ASYNC','PS','AX','V4S','V4S1') else 'false'};", s)
 s = re.sub(r"GemmPipelineScheduler::\w+;", f"GemmPipelineScheduler::{sched};", s)
