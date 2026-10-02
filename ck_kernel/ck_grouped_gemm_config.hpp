@@ -80,7 +80,7 @@ struct CkTileConfig {
 
     // Persistent: grid = CUs * occupancy (capped at CUs * kBlockPerCu), each workgroup loops
     // over tiles. Non-persistent: one workgroup per tile, hardware schedules them.
-    static constexpr bool Persistent = false;
+    static constexpr bool Persistent = true;
     // kBlockPerCu is also the kernel's launch-bounds min-blocks-per-CU.
     static constexpr int kBlockPerCu = 1;
 };
