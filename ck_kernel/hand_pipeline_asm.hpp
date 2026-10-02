@@ -165,6 +165,10 @@ struct HandPipelineAsm : public GemmPipelineAgBgCrCompV3<Problem> {
                     s_waitcnt_barrier<waitcnt_arg::kMaxVmCnt, waitcnt_arg::kMaxExpCnt, 0>();
                 if constexpr (mi + 1 < kMIter)
                     read_a(s, number<mi + 1>{}); // next row, just in time
+                if constexpr (mi < 4) { // next tile's B frags, 2 columns per row, issued early
+                    read_b(s ^ 1, number<1 - buf>{}, number<2 * mi>{});
+                    read_b(s ^ 1, number<1 - buf>{}, number<2 * mi + 1>{});
+                }
                 static_for<0, kKH, 1>{}([&](auto kh) {
                     static_for<0, kNIter, 1>{}([&](auto ni) {
                         mfma(acc[mi][ni], fa[mi % 2][kh], fb[buf][ni][kh]);
@@ -178,10 +182,6 @@ struct HandPipelineAsm : public GemmPipelineAgBgCrCompV3<Problem> {
                         }
                     });
                 });
-                if constexpr (mi < 4) { // next tile's B frags, 2 columns per row
-                    read_b(s ^ 1, number<1 - buf>{}, number<2 * mi>{});
-                    read_b(s ^ 1, number<1 - buf>{}, number<2 * mi + 1>{});
-                }
             });
         };
         index_t kt = 0;
