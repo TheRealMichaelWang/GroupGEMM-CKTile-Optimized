@@ -140,6 +140,12 @@ Kimi-K2) prints cycles per wave-tile (ideal 229376 = 14336 MFMAs x 16) - far les
   ~1541.
 - Persistent kernel: removes ~10k cycles/tile of workgroup turnaround: ~1557. Volatile-asm lane id
   keeps lane-derived values from being hoisted out of the tile loop and spilled.
+- Early A: the first 2 loads of A(kt+2) go right after the row-7 barrier of iteration kt (the
+  earliest point their stage is free): ~251.0k cycles/tile. 3 early loads, front-loading the rest,
+  or an even 1-load-per-row spread were all worse (A latency to the row-7 wait dominates).
+- Prefetches past the last K tile get a buffer resource with num_records = 0 (no memory traffic)
+  instead of re-loading a clamped tile; checked only in the tail (main loop runs while every
+  prefetch is in range, tail of up to 8 iterations): ~250.2k cycles/tile.
 - Counters (DS-V4 48 groups): MFMA busy / CU busy = 3.62 (90.6%), LDS bank conflicts 1.7%,
   ~1695 MHz at 1400 W (hipBLASLt: ~90% at ~1560 MHz).
 Where the remaining ~22k cycles/tile (9%) go: main loop 16.6-16.7 cycles/MFMA (row-7 barrier skew
