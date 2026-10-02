@@ -9,3 +9,19 @@ lat=sum(int(x['Latency'] or 0) for x in r); n=sum(int(x['Hitcount'] or 0) for x 
 print(f"cycles/MFMA = {lat/n:.2f}  (ideal 16)")
 PY
 python3 scripts/att_summary.py /tmp/att | sed -n 2,7p
+python3 - <<'PY'
+import csv,glob
+r=list(csv.DictReader(open(glob.glob("/tmp/att/stats_*.csv")[0])))
+for x in r:
+    for k in ("Hitcount","Latency"): x[k]=int(x[k] or 0)
+cnt={}
+for x in r:
+    if x['Instruction'].startswith('v_mfma'): cnt[x['Hitcount']]=cnt.get(x['Hitcount'],0)+1
+h=max(cnt,key=cnt.get)  # hitcount of the main-loop MFMAs
+loop=[x for x in r if x['Hitcount'] in (h,2*h)]
+lo=min(int(x['Vaddr']) for x in loop); hi=max(int(x['Vaddr']) for x in loop)
+nm=sum(x['Hitcount'] for x in loop if x['Instruction'].startswith('v_mfma'))
+tiles=nm/14336
+f=lambda c:sum(x['Latency'] for x in r if c(int(x['Vaddr'] or 0)))
+print(f"per wave-tile: pre {f(lambda v:v<lo)/tiles:.0f}  loop {f(lambda v:lo<=v<=hi)/tiles:.0f} ({f(lambda v:lo<=v<=hi)/nm:.2f}/MFMA)  post {f(lambda v:v>hi)/tiles:.0f}")
+PY

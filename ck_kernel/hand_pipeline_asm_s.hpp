@@ -97,19 +97,21 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
         const index_t ld_chunk = (lane % 8) ^ ld_row;
         const index_t voff_a   = ((wave * 8 + ld_row) * lda + ld_chunk * 8) * 2;
         const index_t voff_b   = ((wave * 8 + ld_row) * ldb + ld_chunk * 8) * 2;
-        auto make_rsrc = [&](index_t kt) {
-            return make_tuple(make_wave_buffer_resource(a_ptr + kt * kK, 0x7ffff000),
-                              make_wave_buffer_resource(b_ptr + kt * kK, 0x7ffff000));
-        };
-        auto issue_load = [&](const auto &rsrc, index_t stage, auto j, auto op) {
+        // Fixed buffer resources at k = 0; the K tile goes in the instruction's soffset, so
+        // stepping K costs 2 SALU ops instead of rebuilding two resources.
+        const int32x4_t rsrc_a0 = make_wave_buffer_resource(a_ptr, 0x7ffff000);
+        const int32x4_t rsrc_b0 = make_wave_buffer_resource(b_ptr, 0x7ffff000);
+        auto make_rsrc = [&](index_t kt) { return kt * (kK * 2); }; // soffset of K tile kt
+        auto issue_load = [&](index_t koff, index_t stage, auto j, auto op) {
             __builtin_amdgcn_sched_barrier(0);
             const index_t dst =
                 lds_base + stage * kStageBytes + op * kTileBytes + (j * 4 + wave) * 1024;
             m0_set_with_memory(dst);
-            if constexpr (op == 0)
-                async_buffer_load_dwordxn_v<4>(p_smem, rsrc[number<0>{}], voff_a + j * 32 * lda * 2, 0, 0);
-            else
-                async_buffer_load_dwordxn_v<4>(p_smem, rsrc[number<1>{}], voff_b + j * 32 * ldb * 2, 0, 0);
+            const index_t voff = op == 0 ? voff_a + j * 32 * lda * 2 : voff_b + j * 32 * ldb * 2;
+            asm volatile("buffer_load_dwordx4 %1, %2, %3 offen lds"
+                         : "=r"(p_smem) /* dummy dependency for smem */
+                         : "v"(voff), "s"(op == 0 ? rsrc_a0 : rsrc_b0), "s"(koff)
+                         : "memory");
             __builtin_amdgcn_sched_barrier(0);
         };
         auto issue_tile = [&](index_t kt, index_t stage) {

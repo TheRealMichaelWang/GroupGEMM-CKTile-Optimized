@@ -5,7 +5,7 @@
 //   1. each lane's 4 accumulator rows (one column) are converted to bf16 and transposed
 //      inside each lane quad with DPP, so lane j of a quad holds one row x 4 columns;
 //   2. one ds_write_b64 per 16x16 MFMA tile stages the whole C tile in LDS, row major
-//      (row stride 520 B: conflict-free per half wave);
+//      (row stride 528 B);
 //   3. one barrier, then each wave streams 64 full rows (512 B) out with ds_read_b128 +
 //      buffer_store_dwordx4, with the chosen cache policy.
 // Padded instances, atomic (split-K) windows and other dtypes fall back to the base epilogue.
@@ -19,7 +19,7 @@ namespace tunemax {
 template <typename BaseEpilogue, int Mode, bool Pad>
 struct FastEpilogue : public BaseEpilogue {
     static constexpr ck_tile::index_t kM = 256, kN = 256;
-    static constexpr ck_tile::index_t kRowStride = kN * 2 + 8; // bytes
+    static constexpr ck_tile::index_t kRowStride = kN * 2 + 16; // bytes, keeps 16 B alignment
     CK_TILE_HOST_DEVICE static constexpr ck_tile::index_t GetSmemSize() {
         return ck_tile::max(BaseEpilogue::GetSmemSize(), kM * kRowStride);
     }
@@ -97,11 +97,19 @@ struct FastEpilogue : public BaseEpilogue {
             const index_t r_row = wave * 64 + lane / 32, chunk = lane % 32;
             const index_t g_off = (r_row * ldc + chunk * 8) * 2;
             const index_t l_off = r_row * kRowStride + chunk * 16;
-            static_for<0, 32, 1>{}([&](auto i) {
-                const auto d = *reinterpret_cast<const CK_TILE_LDS_ADDR ext_vector_t<uint32_t, 4> *>(
-                    lds + l_off + i * 2 * kRowStride);
-                __builtin_amdgcn_raw_buffer_store_b128(d, rsrc, g_off + i * 2 * ldc * 2, 0,
-                                                       static_cast<int>(store_coherence<Mode>()));
+            // batches of 16 LDS reads, then 16 stores (registers are free after the main loop)
+            using U4 = ext_vector_t<uint32_t, 4>;
+            static_for<0, 32, 16>{}([&](auto i0) {
+                U4 d[16];
+                static_for<0, 16, 1>{}([&](auto i) {
+                    d[i] = *reinterpret_cast<const CK_TILE_LDS_ADDR U4 *>(
+                        lds + l_off + (i0 + i) * 2 * kRowStride);
+                });
+                static_for<0, 16, 1>{}([&](auto i) {
+                    __builtin_amdgcn_raw_buffer_store_b128(
+                        d[i], rsrc, g_off + (i0 + i) * 2 * ldc * 2, 0,
+                        static_cast<int>(store_coherence<Mode>()));
+                });
             });
         }
     }
