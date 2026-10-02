@@ -157,19 +157,24 @@ struct HandPipelineK32 : public GemmPipelineAgBgCrCompV3<Problem> {
             const index_t s_load = (kt + 3) % kStages;
             const index_t kt_load = min(kt + 3, num_loop - 1);
             const auto rsrc_load  = make_rsrc(kt_load);
-            static_for<0, kMIter, 1>{}([&](auto mi) {
-                // Next-tile fragments: all 8 B frags in rows 0-3 (row 0 of the next tile needs
-                // every B frag), A frag i in rows 4-7 (only needed at row i of the next tile).
-                if constexpr (mi < 4) {
-                    read_b(s_next, number<1 - buf>{}, number<2 * mi>{});
-                    read_b(s_next, number<1 - buf>{}, number<2 * mi + 1>{});
+            // Four regions of 2 MFMA rows (16 MFMAs) each: one async load pair (pinned by
+            // sched_barrier), 4 next-tile fragment reads (iteration rows 0-3: all B frags, rows 4-7:
+            // A frags), and a sched_group_barrier pattern that slots each LDS read right after an
+            // MFMA so it issues in the MFMA's shadow.
+            static_for<0, kMIter / 2, 1>{}([&](auto p) {
+                issue_load_pair_r(rsrc_load, s_load, p);
+                if constexpr (p < 2) {
+                    static_for<0, 4, 1>{}([&](auto q) { read_b(s_next, number<1 - buf>{}, number<4 * p + q>{}); });
                 } else {
-                    read_a(s_next, number<1 - buf>{}, number<2 * (mi - 4)>{});
-                    read_a(s_next, number<1 - buf>{}, number<2 * (mi - 4) + 1>{});
+                    static_for<0, 4, 1>{}([&](auto q) { read_a(s_next, number<1 - buf>{}, number<4 * (p - 2) + q>{}); });
                 }
-                if constexpr (mi % 2 == 0)
-                    issue_load_pair_r(rsrc_load, s_load, number<mi / 2>{});
-                mfma_row(buf, mi);
+                mfma_row(buf, number<2 * p>{});
+                mfma_row(buf, number<2 * p + 1>{});
+                static_for<0, 4, 1>{}([&](auto) {
+                    __builtin_amdgcn_sched_group_barrier(0x008, 1, 0); // MFMA
+                    __builtin_amdgcn_sched_group_barrier(0x100, 1, 0); // DS read
+                });
+                __builtin_amdgcn_sched_group_barrier(0x008, 12, 0);    // remaining MFMAs
             });
         };
         index_t kt = 0;
