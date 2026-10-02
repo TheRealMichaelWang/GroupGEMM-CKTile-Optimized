@@ -95,3 +95,4 @@ Tools: `scripts/quick.sh` (bf16-only tuning build, ~15 s + ~5 s run), `QUICK_ONL
   still split accumulators); best config ~1387 vs ~1400 with amdclang. No gain.
 - 8-warp CompAsync + XOR at K=64: spills 547 VGPRs (~130 TF). Eight-wave pipeline with 2x2 warps:
   wrong results, ~800 TF.
+- Eight-wave + 32x32x16 MFMA: 48% LDS bank conflicts with CK's policy (swizzle factor 2). Our policy copy (eight_wave_policy_swizzled.hpp, factor 8) removes them (0%) but gives wrong results and no speedup (~1337 either way) -> conflicts are not its limiter. Not used.

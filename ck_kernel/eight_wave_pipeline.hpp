@@ -19,13 +19,16 @@
 #include "ck_tile/ops/gemm.hpp"
 #include "coherence_epilogue.hpp"
 #include "eight_wave_custom.hpp"
+#include "eight_wave_policy_swizzled.hpp"
 
 namespace tunemax {
 
 template <typename Problem, int AMode = kStoreDefault, int BMode = kStoreDefault,
-          ck_tile::index_t RelaxA = -1>
-struct GroupedEightWavePipeline : public ck_tile::GemmPipelineAgBgCrCompAsyncEightWaves<Problem> {
-    using Base = ck_tile::GemmPipelineAgBgCrCompAsyncEightWaves<Problem>;
+          ck_tile::index_t RelaxA = -1,
+          typename Policy         = ck_tile::GemmPipelineAgBgCrCompAsyncEightWavesPolicy>
+struct GroupedEightWavePipeline
+    : public ck_tile::GemmPipelineAgBgCrCompAsyncEightWaves<Problem, Policy> {
+    using Base = ck_tile::GemmPipelineAgBgCrCompAsyncEightWaves<Problem, Policy>;
 
     static constexpr ck_tile::index_t GetVectorSizeC() { return 8; } // kernel name only
 
@@ -42,8 +45,7 @@ struct GroupedEightWavePipeline : public ck_tile::GemmPipelineAgBgCrCompAsyncEig
             // Our copy of the ping-pong loop (eight_wave_custom.hpp); same run-time
             // hot-loop / tail dispatch as CK's tuple overload.
             using Sched = ck_tile::BaseGemmPipelineAgBgCrCompV3<Problem, true>;
-            using Impl  = CustomEightWavesImpl<Problem, ck_tile::GemmPipelineAgBgCrCompAsyncEightWavesPolicy,
-                                               RelaxA>;
+            using Impl  = CustomEightWavesImpl<Problem, Policy, RelaxA>;
             const auto a = with_store_mode<AMode>(a_window);
             const auto b = with_store_mode<BMode>(b_window);
             const auto run = [&](auto hot_loop_, auto tail_num_) {
