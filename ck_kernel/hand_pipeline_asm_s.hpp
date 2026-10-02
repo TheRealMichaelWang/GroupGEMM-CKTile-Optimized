@@ -45,6 +45,24 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
 #define TUNEMAX_B_OFF 1
 #endif
     static constexpr index_t kBOff    = TUNEMAX_B_OFF; // B loads after MFMA kBOff and 8 + kBOff
+#ifndef TUNEMAX_B3
+#define TUNEMAX_B3 1
+#endif
+    // kB3: B gets a third LDS buffer (A 2 x 32 KB + B 3 x 32 KB = all 160 KB of gfx950 LDS), so
+    // B(kt+3) can overwrite B(kt)'s buffer anywhere in iteration kt: one barrier per iteration.
+    static constexpr bool kB3 = TUNEMAX_B3;
+#ifndef TUNEMAX_B_ROW0
+#define TUNEMAX_B_ROW0 4
+#endif
+    // B(kt+3) loads go in rows kBRow0 .. kBRow0+3 (kB3 only; otherwise rows 4-7)
+    static constexpr index_t kBRow0 = kB3 ? TUNEMAX_B_ROW0 : 4;
+    // B loads issued before the row-7 barrier, i.e. after A(kt+1)'s loads
+    static constexpr index_t kBLoadsBeforeBar = [] {
+        index_t n = 0;
+        for (index_t r = kBRow0; r < kBRow0 + 4; ++r)
+            n += r < 7 ? 2 : (kBarIdx > kBOff) + (kBarIdx > 8 + kBOff);
+        return n;
+    }();
     static_assert(Problem::BlockGemmShape::kM == kM && Problem::BlockGemmShape::kN == kN &&
                       Problem::BlockGemmShape::kK == kK,
                   "HandPipelineAsmS is written for 256x256x64");
@@ -57,7 +75,16 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
     static constexpr index_t kStageBytes = 2 * kTileBytes;
     static constexpr index_t kLoads      = kTileBytes / (4 * 1024); // 8 per wave per operand
 
-    CK_TILE_HOST_DEVICE static constexpr index_t GetSmemSize() { return 2 * kStageBytes; }
+    CK_TILE_HOST_DEVICE static constexpr index_t GetSmemSize() {
+        return kB3 ? 5 * kTileBytes : 2 * kStageBytes;
+    }
+    // byte offsets of A stage s and B buffer t in LDS
+    CK_TILE_HOST_DEVICE static constexpr index_t a_base(index_t s) {
+        return kB3 ? s * kTileBytes : s * kStageBytes;
+    }
+    CK_TILE_HOST_DEVICE static constexpr index_t b_base(index_t t) {
+        return kB3 ? (2 + t) * kTileBytes : t * kStageBytes + kTileBytes;
+    }
 
     static constexpr auto c_warp_y_lengths =
         to_sequence(CWarpDstr{}.get_ys_to_d_descriptor().get_lengths());
@@ -110,10 +137,10 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
         const int32x4_t rsrc_a0 = make_wave_buffer_resource(a_ptr, 0x7ffff000);
         const int32x4_t rsrc_b0 = make_wave_buffer_resource(b_ptr, 0x7ffff000);
         auto make_rsrc = [&](index_t kt) { return kt * (kK * 2); }; // soffset of K tile kt
-        auto issue_load = [&](index_t koff, index_t stage, auto j, auto op) {
+        // buf_off: byte offset of the destination tile buffer (a_base / b_base)
+        auto issue_load = [&](index_t koff, index_t buf_off, auto j, auto op) {
             __builtin_amdgcn_sched_barrier(0);
-            const index_t dst =
-                lds_base + stage * kStageBytes + op * kTileBytes + (j * 4 + wave) * 1024;
+            const index_t dst = lds_base + buf_off + (j * 4 + wave) * 1024;
             m0_set_with_memory(dst);
             const index_t voff = op == 0 ? voff_a + j * 32 * lda * 2 : voff_b + j * 32 * ldb * 2;
             asm volatile("buffer_load_dwordx4 %1, %2, %3 offen lds"
@@ -121,13 +148,6 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
                          : "v"(voff), "s"(op == 0 ? rsrc_a0 : rsrc_b0), "s"(koff)
                          : "memory");
             __builtin_amdgcn_sched_barrier(0);
-        };
-        auto issue_tile = [&](index_t kt, index_t stage) {
-            const auto rsrc = make_rsrc(kt);
-            static_for<0, kLoads, 1>{}([&](auto j) {
-                issue_load(rsrc, stage, j, number<0>{});
-                issue_load(rsrc, stage, j, number<1>{});
-            });
         };
 
         // Fragment (iter i, k-half kh): row (i*2+w)*16 + lane%16, logical chunk kh*4 + lane/16,
@@ -144,22 +164,22 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
         auto read_a = [&](index_t stage, auto i) {
             static_for<0, kKH, 1>{}([&](auto kh) {
                 fa[i % 2][kh] = *reinterpret_cast<const CK_TILE_LDS_ADDR Vec8 *>(
-                    lds + stage * kStageBytes + a_off[kh] + i * 32 * kRowBytes);
+                    lds + a_base(stage) + a_off[kh] + i * 32 * kRowBytes);
             });
         };
         auto read_b = [&](index_t stage, auto buf, auto i) {
             static_for<0, kKH, 1>{}([&](auto kh) {
                 fb[buf][i][kh] = *reinterpret_cast<const CK_TILE_LDS_ADDR Vec8 *>(
-                    lds + stage * kStageBytes + kTileBytes + b_off[kh] + i * 32 * kRowBytes);
+                    lds + b_base(stage) + b_off[kh] + i * 32 * kRowBytes);
             });
         };
 
         // --- prologue: A0, B0 -> stage 0; B1 -> stage 1; pre-read B0 and A0 row 0; B2 -> stage 0.
         {
             const auto r0 = make_rsrc(0), r1 = make_rsrc(min(index_t{1}, num_loop - 1));
-            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r0, 0, j, number<0>{}); });
-            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r0, 0, j, number<1>{}); });
-            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r1, 1, j, number<1>{}); });
+            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r0, a_base(0), j, number<0>{}); });
+            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r0, b_base(0), j, number<1>{}); });
+            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r1, b_base(1), j, number<1>{}); });
         }
         block_sync_lds_direct_load<kLoads>(); // A0, B0 landed
         static_for<0, kNIter, 1>{}([&](auto i) { read_b(0, number<0>{}, i); });
@@ -167,7 +187,7 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
         s_waitcnt_barrier<waitcnt_arg::kMaxVmCnt, waitcnt_arg::kMaxExpCnt, 0>(); // B0 read everywhere
         {
             const auto r2 = make_rsrc(min(index_t{2}, num_loop - 1));
-            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r2, 0, j, number<1>{}); });
+            static_for<0, kLoads, 1>{}([&](auto j) { issue_load(r2, b_base(kB3 ? 2 : 0), j, number<1>{}); });
         }
 
         // One LDS read of a 16x32 fragment.
@@ -181,19 +201,23 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
         //   row 4    : barrier (all waves done reading B(kt+1)); rows 4-7: B(kt+3) -> stage s^1
         //   row 7    : wait A(kt+1) landed + barrier (also: all waves done reading A(kt) in s),
         //              then read A(kt+1) row 0 from stage s^1
-        auto iteration = [&](index_t kt, auto buf, auto first) {
+        // t3 = kt % 3 (kB3 B buffer rotation), a compile-time constant like buf (loop unrolled x6)
+        auto iteration = [&](index_t kt, auto buf, auto first, auto t3) {
             constexpr index_t s = buf; // stage of tile kt (buf == kt % 2)
             const auto rsrc_a = make_rsrc(min(kt + 1, num_loop - 1));
             const auto rsrc_b = make_rsrc(min(kt + 3, num_loop - 1));
-            const index_t a_cur = s * kStageBytes, a_nxt = (s ^ 1) * kStageBytes;
-            const index_t b_nxt = (s ^ 1) * kStageBytes + kTileBytes;
+            const index_t a_cur = a_base(s), a_nxt = a_base(s ^ 1);
+            // B(kt+1) is pre-read from b_nxt; B(kt+3) is loaded into b_wr
+            constexpr index_t b_wr  = kB3 ? b_base(t3) : b_base(s ^ 1);
+            constexpr index_t b_nxt = kB3 ? b_base(t3 == 2 ? 0 : t3 + 1) : b_base(s ^ 1);
             static_for<0, kMIter, 1>{}([&](auto mi) {
                 static_for<0, kKH * kNIter, 1>{}([&](auto idx) {
                     constexpr index_t kh = idx / kNIter, ni = idx % kNIter;
-                    if constexpr (mi == 4 && idx == kBOff) // all waves done reading B(kt+1)
+                    if constexpr (!kB3 && mi == 4 && idx == kBOff) // all waves done reading B(kt+1)
                         s_waitcnt_barrier<waitcnt_arg::kMaxVmCnt, waitcnt_arg::kMaxExpCnt, 0>();
-                    if constexpr (mi == 7 && idx == kBarIdx) // loads of rows 4-6 + row 7 so far may fly
-                        s_waitcnt_barrier<6 + (kBarIdx > kBOff) + (kBarIdx > 8 + kBOff), waitcnt_arg::kMaxExpCnt, 0>();
+                    // loads issued after A(kt+1)'s may fly: B(kt+3) of rows 4-6 and row 7 so far
+                    if constexpr (mi == 7 && idx == kBarIdx)
+                        s_waitcnt_barrier<kBLoadsBeforeBar, waitcnt_arg::kMaxExpCnt, 0>();
                     const Vec8 &x = kTransposedAcc ? fb[buf][ni][kh] : fa[mi % 2][kh];
                     const Vec8 &y = kTransposedAcc ? fa[mi % 2][kh] : fb[buf][ni][kh];
                     if constexpr (first && kh == 0)
@@ -208,9 +232,9 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
                         kAPerRow == 2 ? (idx == 0 ? 0 : idx == 8 ? 1 : -1)
                                       : (idx == 0 ? 0 : idx == 5 ? 1 : idx == 8 ? 2 : idx == 13 ? 3 : -1);
                     if constexpr (mi * kAPerRow < kLoads && a_slot >= 0)
-                        issue_load(rsrc_a, s ^ 1, number<mi * kAPerRow + a_slot>{}, number<0>{});
-                    if constexpr (mi >= 4 && idx % 8 == kBOff)
-                        issue_load(rsrc_b, s ^ 1, number<(mi - 4) * 2 + idx / 8>{}, number<1>{});
+                        issue_load(rsrc_a, a_nxt, number<mi * kAPerRow + a_slot>{}, number<0>{});
+                    if constexpr (mi >= kBRow0 && mi < kBRow0 + 4 && idx % 8 == kBOff)
+                        issue_load(rsrc_b, b_wr, number<(mi - kBRow0) * 2 + idx / 8>{}, number<1>{});
                     // next A row (or next tile's row 0 in row 7) after MFMA 2 and 4
                     // memory ops: loads after even MFMAs, LDS reads after odd ones
                     if constexpr (mi + 1 < kMIter && (idx == 2 || idx == 4)) {
@@ -226,7 +250,7 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
                     // rows 0-3: next tile's B, columns 2mi and 2mi+1, after MFMA 6, 10, 12, 14
                     // (row 3 earlier, so they are done by the barrier at the start of row 4)
                     constexpr index_t q = mi < 3 ? (idx == 6 ? 0 : idx == 10 ? 1 : idx == 12 ? 2 : idx == 14 ? 3 : -1)
-                                                 : (idx == 1 ? 0 : idx == 3 ? 1 : idx == 5 ? 2 : idx == 6 ? 3 : -1);
+                                                 : (idx == 3 ? 0 : idx == 5 ? 1 : idx == 6 ? 2 : idx == 7 ? 3 : -1);
                     if constexpr (mi < 4 && q >= 0) {
                         constexpr index_t c = 2 * mi + q / 2, kk = q % 2;
                         rd(fb[1 - buf][c][kk], b_nxt + b_off[kk] + c * 32 * kRowBytes);
@@ -236,14 +260,18 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
             });
         };
         // tile 0 peeled: its first K step initializes the accumulators (no zero fill)
-        iteration(0, number<0>{}, true_type{});
+        // tile kt uses buf = kt % 2 and t3 = kt % 3: unroll by 6 so both are constants
+        iteration(0, number<0>{}, true_type{}, number<0>{});
         index_t kt = 1;
-        for (; kt + 1 < num_loop; kt += 2) {
-            iteration(kt, number<1>{}, false_type{});
-            iteration(kt + 1, number<0>{}, false_type{});
+        for (; kt + 5 < num_loop; kt += 6) {
+            static_for<1, 7, 1>{}([&](auto u) {
+                iteration(kt + u - 1, number<u % 2>{}, false_type{}, number<u % 3>{});
+            });
         }
-        if (kt < num_loop)
-            iteration(kt, number<1>{}, false_type{});
+        static_for<1, 6, 1>{}([&](auto u) { // up to 5 remaining tiles
+            if (kt + u - 1 < num_loop)
+                iteration(kt + u - 1, number<u % 2>{}, false_type{}, number<u % 3>{});
+        });
         s_waitcnt_barrier<0, waitcnt_arg::kMaxExpCnt, 0>(); // drain before the epilogue uses LDS
 
         // Accumulators -> CK's C tile (same per-lane layout as CK's warp GEMM, verified).
