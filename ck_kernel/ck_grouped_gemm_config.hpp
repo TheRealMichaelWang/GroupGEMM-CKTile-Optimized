@@ -10,6 +10,7 @@
 #include "ck_tile/ops/gemm.hpp"
 #include "eight_wave_pipeline.hpp"
 #include "xor_async_policy.hpp"
+#include "coherence_epilogue.hpp"
 
 namespace tunemax {
 
@@ -47,6 +48,9 @@ struct CkTileConfig {
 
     // Epilogue: true = CShuffle (via LDS), false = Default (direct from registers).
     static constexpr bool CShuffleEpilogue = true;
+    // Cache policy for C stores (coherence_epilogue.hpp): kStoreDefault, kStoreNT (non-temporal,
+    // C is never re-read, like hipBLASLt's NTC/NTD), kStoreDeviceNT, kStoreSystemNT.
+    static constexpr int CStoreMode = kStoreNT;
 
     // Async: global->LDS loads that bypass registers (gfx950). VectorSize: max global load
     // width in elements. DataCachePrefetch: ck_tile::DataCachePrefetchKind::None or others.

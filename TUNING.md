@@ -70,3 +70,5 @@ the MFMA pipes busy at 1 wave/SIMD - i.e. what hipBLASLt's hand-scheduled kernel
 Tools: `scripts/quick.sh` (bf16-only tuning build, ~15 s + ~5 s run), `QUICK_ONLY=323`,
 `scripts/build.sh --full` before full runs or fp16, `scripts/pmc.sh BACKEND` (counters),
 `scripts/asm_loop.py` (hot-loop instruction mix), `scripts/flags.sh "<flags>"`.
+- amdgpu_num_vgpr(N) on our own entry kernel: caps the TOTAL VGPR+AGPR budget (128 -> 256 VGPR/0 AGPR, occupancy 2, scratch spills, ~800 TF); 192 ignored. Cannot force hipBLASLt-style 120 VGPR / 384 AGPR split this way.
+- Non-temporal C stores (ck_kernel/coherence_epilogue.hpp, CStoreMode=kStoreNT): 1394 -> ~1412 top3 mean (59: 1438). Enum values differ host vs device, so the mode is a plain int.

@@ -12,7 +12,7 @@ r = subprocess.run(cmd, capture_output=True, text=True)
 if r.returncode:
     print("\n".join(l for l in r.stderr.split("\n") if "error" in l)[:2000]); sys.exit(1)
 s = open("/tmp/asm/ck.s").read()
-names = [(m.start(), m.group(1)) for m in re.finditer(r"^(_ZN7ck_tile6kentry\S*):", s, re.M)]
+names = [(m.start(), m.group(1)) for m in re.finditer(r"^(_ZN\S*(?:kentry|tunemax_grouped_gemm_entry)\S*):", s, re.M)]
 for i, (st, nm) in enumerate(names):
     if "DF16b" not in nm or "Lb1ELb1ELb1E" in nm:   # bf16, unpadded instance only
         continue

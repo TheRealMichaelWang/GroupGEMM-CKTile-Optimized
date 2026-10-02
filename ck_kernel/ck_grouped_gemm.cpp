@@ -18,6 +18,7 @@
 #include "backend.hpp"
 #include "ck_grouped_gemm_config.hpp"
 #include "xcd_partitioner.hpp"
+#include "coherence_epilogue.hpp"
 
 #include "ck_tile/core.hpp"
 #include "ck_tile/host/kernel_launch.hpp"
@@ -80,7 +81,10 @@ template <typename Cfg, typename DataType, bool Pad> struct CkGroupedGemm {
         TilePartitioner::NPerBlock, Pad, Pad, Cfg::M_Warp_Tile, Cfg::N_Warp_Tile,
         Cfg::K_Warp_Tile, Problem::TransposeC>>;
 
-    using Epilogue = std::conditional_t<Cfg::CShuffleEpilogue, CShuffleEpi, DefaultEpi>;
+    using BaseEpilogue = std::conditional_t<Cfg::CShuffleEpilogue, CShuffleEpi, DefaultEpi>;
+    // Optionally store C with a different cache policy (Cfg::CStoreCoherence).
+    using Epilogue = std::conditional_t<Cfg::CStoreMode == kStoreDefault, BaseEpilogue,
+                                        CoherenceEpilogue<BaseEpilogue, Cfg::CStoreMode>>;
 
     using Kernel = ck_tile::GroupedGemmKernel<TilePartitioner, Pipeline, Epilogue>;
 
