@@ -188,6 +188,9 @@ private:
         }
         total_tiles_ = tiles;
 
+        // The hand pipelines bound M/N tails with their buffer resources but do not mask K tails.
+        if (p.k % Cfg::K_Tile != 0)
+            return "K must be a multiple of K_Tile for this pipeline";
         if (divisible)
             return finish<CkGroupedGemm<Cfg, DataType, false>>(kargs, p, stream);
 #ifdef TUNEMAX_TUNING_BUILD

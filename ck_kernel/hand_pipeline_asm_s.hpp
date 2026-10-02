@@ -48,7 +48,8 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
     // Unpadded instances (whose C goes through tunemax::FastEpilogue) compute C^T per MFMA tile
     // (operands swapped): each lane then holds 4 consecutive columns of one row, which the
     // epilogue stores without a transpose. Padded instances keep CK's C layout.
-    static constexpr bool kTransposedAcc = !Problem::kPadM && !Problem::kPadN && !Problem::kPadK;
+    static constexpr bool kTransposedAcc = !Problem::kPadM && !Problem::kPadN && !Problem::kPadK &&
+                                           std::is_same_v<ADataType, bf16_t>;
 #ifndef TUNEMAX_B_OFF
 #define TUNEMAX_B_OFF 1
 #endif
@@ -75,8 +76,11 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
                       Problem::BlockGemmShape::kK == kK,
                   "HandPipelineAsmS is written for 256x256x64");
     static_assert(Problem::kBlockSize == 256, "4 waves");
-    static_assert(std::is_same_v<ADataType, bf16_t> && std::is_same_v<BDataType, bf16_t>,
-                  "the inline MFMA is the bf16 one");
+    static_assert(std::is_same_v<ADataType, BDataType> &&
+                      (std::is_same_v<ADataType, bf16_t> || std::is_same_v<ADataType, half_t>),
+                  "bf16 or fp16 inputs");
+    // K tails are not masked (columns past K are the next row's data): the host only launches
+    // this pipeline when K % kK == 0.
 
     static constexpr index_t kRowBytes   = kK * 2;
     static constexpr index_t kTileBytes  = kM * kRowBytes;
@@ -101,21 +105,33 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
     using Vec8 = ext_vector_t<int32_t, 4>;
     using F4   = ext_vector_t<float, 4>;
 
+    // Window -> (pointer at the window origin, leading dimension, bytes from there to the end of
+    // the tensor). The byte count bounds the buffer resource, so rows past the matrix (partial
+    // M/N tiles) read as zeros.
     template <typename Window>
-    CK_TILE_DEVICE static auto base_and_ld(const Window &win, index_t &ld) {
+    CK_TILE_DEVICE static auto base_and_ld(const Window &win, index_t &ld, index_t &bytes) {
         const auto &view = win.get_bottom_tensor_view();
         const auto &desc = view.get_tensor_descriptor();
         ld = desc.calculate_offset(make_multi_index(1, 0)) -
              desc.calculate_offset(make_multi_index(0, 0));
-        return view.get_buffer_view().p_data_ + desc.calculate_offset(win.get_window_origin());
+        const index_t origin = desc.calculate_offset(win.get_window_origin());
+        bytes = (static_cast<index_t>(view.get_buffer_view().buffer_size_) - origin) *
+                static_cast<index_t>(sizeof(ADataType));
+        return view.get_buffer_view().p_data_ + origin;
     }
 
     // acc = a * b (C operand 0): the first K step initializes the accumulators
     CK_TILE_DEVICE static void mfma_init(F4 &acc, const Vec8 &a, const Vec8 &b) {
-        asm("v_mfma_f32_16x16x32_bf16 %0, %1, %2, 0" : "=a"(acc) : "v"(a), "v"(b));
+        if constexpr (std::is_same_v<ADataType, bf16_t>)
+            asm("v_mfma_f32_16x16x32_bf16 %0, %1, %2, 0" : "=a"(acc) : "v"(a), "v"(b));
+        else
+            asm("v_mfma_f32_16x16x32_f16 %0, %1, %2, 0" : "=a"(acc) : "v"(a), "v"(b));
     }
     CK_TILE_DEVICE static void mfma(F4 &acc, const Vec8 &a, const Vec8 &b) {
-        asm("v_mfma_f32_16x16x32_bf16 %0, %1, %2, %0" : "+a"(acc) : "v"(a), "v"(b));
+        if constexpr (std::is_same_v<ADataType, bf16_t>)
+            asm("v_mfma_f32_16x16x32_bf16 %0, %1, %2, %0" : "+a"(acc) : "v"(a), "v"(b));
+        else
+            asm("v_mfma_f32_16x16x32_f16 %0, %1, %2, %0" : "+a"(acc) : "v"(a), "v"(b));
     }
 
     template <typename ADramWindow, typename BDramWindow,
@@ -126,9 +142,9 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
         const index_t wave = __builtin_amdgcn_readfirstlane(threadIdx.x / 64);
         const index_t wm = wave / 2, wn = wave % 2;
 
-        index_t lda, ldb;
-        const ADataType *a_ptr = base_and_ld(a_win, lda);
-        const BDataType *b_ptr = base_and_ld(b_win, ldb);
+        index_t lda, ldb, a_bytes, b_bytes;
+        const ADataType *a_ptr = base_and_ld(a_win, lda, a_bytes);
+        const BDataType *b_ptr = base_and_ld(b_win, ldb, b_bytes);
 
         auto *lds              = (CK_TILE_LDS_ADDR uint8_t *)p_smem;
         const index_t lds_base = __builtin_amdgcn_readfirstlane(
@@ -142,8 +158,8 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
         const index_t voff_b   = ((wave * 8 + ld_row) * ldb + ld_chunk * 8) * 2;
         // Fixed buffer resources at k = 0; the K tile goes in the instruction's soffset, so
         // stepping K costs 2 SALU ops instead of rebuilding two resources.
-        const int32x4_t rsrc_a0 = make_wave_buffer_resource(a_ptr, 0x7ffff000);
-        const int32x4_t rsrc_b0 = make_wave_buffer_resource(b_ptr, 0x7ffff000);
+        const int32x4_t rsrc_a0 = make_wave_buffer_resource(a_ptr, a_bytes);
+        const int32x4_t rsrc_b0 = make_wave_buffer_resource(b_ptr, b_bytes);
         auto make_rsrc = [&](index_t kt) { return kt * (kK * 2); }; // soffset of K tile kt
         // buf_off: byte offset of the destination tile buffer (a_base / b_base)
         auto issue_load = [&](index_t koff, index_t buf_off, auto j, auto op) {
