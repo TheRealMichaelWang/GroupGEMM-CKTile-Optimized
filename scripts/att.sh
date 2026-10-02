@@ -17,11 +17,12 @@ for x in r:
 cnt={}
 for x in r:
     if x['Instruction'].startswith('v_mfma'): cnt[x['Hitcount']]=cnt.get(x['Hitcount'],0)+1
-h=max(cnt,key=cnt.get)  # hitcount of the main-loop MFMAs
+h=max(cnt)  # hitcount of the main-loop MFMAs
 loop=[x for x in r if x['Hitcount'] in (h,2*h)]
 lo=min(int(x['Vaddr']) for x in loop); hi=max(int(x['Vaddr']) for x in loop)
 nm=sum(x['Hitcount'] for x in loop if x['Instruction'].startswith('v_mfma'))
 tiles=nm/14336
 f=lambda c:sum(x['Latency'] for x in r if c(int(x['Vaddr'] or 0)))
-print(f"per wave-tile: pre {f(lambda v:v<lo)/tiles:.0f}  loop {f(lambda v:lo<=v<=hi)/tiles:.0f} ({f(lambda v:lo<=v<=hi)/nm:.2f}/MFMA)  post {f(lambda v:v>hi)/tiles:.0f}")
+nall=sum(x['Hitcount'] for x in r if x['Instruction'].startswith('v_mfma')); tiles=nall/14336
+print(f"per wave-tile: total {f(lambda v:True)/tiles:.0f} (ideal 229376)  main loop {f(lambda v:lo<=v<=hi)/nm:.2f}/MFMA  outside main loop {f(lambda v:not(lo<=v<=hi))/tiles:.0f}")
 PY

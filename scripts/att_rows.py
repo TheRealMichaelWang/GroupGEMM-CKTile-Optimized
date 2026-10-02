@@ -8,7 +8,7 @@ r.sort(key=lambda x: int(x['Vaddr'] or 0))
 cnt = {}
 for x in r:
     if x['Instruction'].startswith('v_mfma'): cnt[x['Hitcount']] = cnt.get(x['Hitcount'], 0) + 1
-H = max(cnt, key=cnt.get)
+H = max(cnt)
 loop = [x for x in r if x['Hitcount'] in (H, 2 * H)]
 n = acc = 0; notes = []
 for x in loop:

@@ -75,6 +75,10 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
         return view.get_buffer_view().p_data_ + desc.calculate_offset(win.get_window_origin());
     }
 
+    // acc = a * b (C operand 0): the first K step initializes the accumulators
+    CK_TILE_DEVICE static void mfma_init(F4 &acc, const Vec8 &a, const Vec8 &b) {
+        asm("v_mfma_f32_16x16x32_bf16 %0, %1, %2, 0" : "=a"(acc) : "v"(a), "v"(b));
+    }
     CK_TILE_DEVICE static void mfma(F4 &acc, const Vec8 &a, const Vec8 &b) {
         asm("v_mfma_f32_16x16x32_bf16 %0, %1, %2, %0" : "+a"(acc) : "v"(a), "v"(b));
     }
@@ -136,10 +140,7 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
 
         Vec8 fa[2][kKH];         // A rows, read just in time (2-row ring)
         Vec8 fb[2][kNIter][kKH]; // double-buffered
-        F4 acc[kMIter][kNIter];
-        static_for<0, kMIter, 1>{}([&](auto mi) {
-            static_for<0, kNIter, 1>{}([&](auto ni) { acc[mi][ni] = F4{0.f, 0.f, 0.f, 0.f}; });
-        });
+        F4 acc[kMIter][kNIter]; // initialized by the first K step
         auto read_a = [&](index_t stage, auto i) {
             static_for<0, kKH, 1>{}([&](auto kh) {
                 fa[i % 2][kh] = *reinterpret_cast<const CK_TILE_LDS_ADDR Vec8 *>(
@@ -180,8 +181,8 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
         //   row 4    : barrier (all waves done reading B(kt+1)); rows 4-7: B(kt+3) -> stage s^1
         //   row 7    : wait A(kt+1) landed + barrier (also: all waves done reading A(kt) in s),
         //              then read A(kt+1) row 0 from stage s^1
-        auto iteration = [&](index_t kt, auto buf) {
-            const index_t s   = kt & 1;
+        auto iteration = [&](index_t kt, auto buf, auto first) {
+            constexpr index_t s = buf; // stage of tile kt (buf == kt % 2)
             const auto rsrc_a = make_rsrc(min(kt + 1, num_loop - 1));
             const auto rsrc_b = make_rsrc(min(kt + 3, num_loop - 1));
             const index_t a_cur = s * kStageBytes, a_nxt = (s ^ 1) * kStageBytes;
@@ -193,10 +194,12 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
                         s_waitcnt_barrier<waitcnt_arg::kMaxVmCnt, waitcnt_arg::kMaxExpCnt, 0>();
                     if constexpr (mi == 7 && idx == kBarIdx) // loads of rows 4-6 + row 7 so far may fly
                         s_waitcnt_barrier<6 + (kBarIdx > kBOff) + (kBarIdx > 8 + kBOff), waitcnt_arg::kMaxExpCnt, 0>();
-                    if constexpr (kTransposedAcc)
-                        mfma(acc[mi][ni], fb[buf][ni][kh], fa[mi % 2][kh]);
+                    const Vec8 &x = kTransposedAcc ? fb[buf][ni][kh] : fa[mi % 2][kh];
+                    const Vec8 &y = kTransposedAcc ? fa[mi % 2][kh] : fb[buf][ni][kh];
+                    if constexpr (first && kh == 0)
+                        mfma_init(acc[mi][ni], x, y);
                     else
-                        mfma(acc[mi][ni], fa[mi % 2][kh], fb[buf][ni][kh]);
+                        mfma(acc[mi][ni], x, y);
                     __builtin_amdgcn_sched_barrier(0);
                     // loads after MFMA 0 and 8
                     // A(kt+1): kAPerRow loads per row from row 0; B(kt+3): 2 per row in rows 4-7
@@ -232,13 +235,15 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
                 });
             });
         };
-        index_t kt = 0;
+        // tile 0 peeled: its first K step initializes the accumulators (no zero fill)
+        iteration(0, number<0>{}, true_type{});
+        index_t kt = 1;
         for (; kt + 1 < num_loop; kt += 2) {
-            iteration(kt, number<0>{});
-            iteration(kt + 1, number<1>{});
+            iteration(kt, number<1>{}, false_type{});
+            iteration(kt + 1, number<0>{}, false_type{});
         }
         if (kt < num_loop)
-            iteration(kt, number<0>{});
+            iteration(kt, number<1>{}, false_type{});
         s_waitcnt_barrier<0, waitcnt_arg::kMaxExpCnt, 0>(); // drain before the epilogue uses LDS
 
         // Accumulators -> CK's C tile (same per-lane layout as CK's warp GEMM, verified).
