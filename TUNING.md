@@ -146,6 +146,10 @@ Kimi-K2) prints cycles per wave-tile (ideal 229376 = 14336 MFMAs x 16) - far les
 - Prefetches past the last K tile get a buffer resource with num_records = 0 (no memory traffic)
   instead of re-loading a clamped tile; checked only in the tail (main loop runs while every
   prefetch is in range, tail of up to 8 iterations): ~250.2k cycles/tile.
+- Padded instances (N % 256 != 0, e.g. GPT-OSS N = 2880/5760) also use FastEpilogue: C resource
+  bounded to the tensor end (rows past M dropped), column chunks past N masked with CK's
+  padded-view validity check (CK requires N % 8 == 0, so chunks never straddle N); accumulators
+  transposed for every bf16 instance. GPT-OSS padded cases +5-8% (e.g. 1302 -> 1438).
 - Counters (DS-V4 48 groups): MFMA busy / CU busy = 3.62 (90.6%), LDS bank conflicts 1.7%,
   ~1695 MHz at 1400 W (hipBLASLt: ~90% at ~1560 MHz).
 Where the remaining ~22k cycles/tile (9%) go: main loop 16.6-16.7 cycles/MFMA (row-7 barrier skew

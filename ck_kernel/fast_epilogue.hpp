@@ -10,7 +10,7 @@
 //   3. one barrier, then each wave streams 64 full rows (512 B) out with ds_read_b128 +
 //      buffer_store_dwordx4, with the chosen cache policy.
 // Padded instances mask rows past M (bounded buffer resource) and columns past N (CK's
-// padded-view validity check). fp16 falls back to the base epilogue; bf16 split-K is unsupported.
+// padded-view validity check). bf16 and fp16; split-K (atomic) windows are unsupported.
 #pragma once
 
 #include "ck_tile/core.hpp"
@@ -32,12 +32,11 @@ struct FastEpilogue : public BaseEpilogue {
         using namespace ck_tile;
         using View = remove_cvref_t<decltype(c_window.get_bottom_tensor_view())>;
         using CData = remove_cvref_t<typename View::DataType>;
-        if constexpr (!std::is_same_v<CData, bf16_t>) {
-            // fp16: the pipeline keeps CK's C layout, CK's epilogue stores it
+        if constexpr (!std::is_same_v<CData, bf16_t> && !std::is_same_v<CData, half_t>) {
             auto c_win = with_store_mode<Mode>(c_window);
             return BaseEpilogue::operator()(c_win, c_tile, d_windows, smem);
         } else if constexpr (View::DstInMemOp != memory_operation_enum::set) {
-            // bf16 accumulators hold C^T tiles, which CK's (split-K atomic) epilogue cannot take.
+            // The accumulators hold C^T tiles, which CK's (split-K atomic) epilogue cannot take.
             // The tunemax backend always launches k_batch = 1.
             __builtin_trap();
         } else {
@@ -66,10 +65,10 @@ struct FastEpilogue : public BaseEpilogue {
                     const auto v = c_tile.get_y_sliced_thread_data(
                         merge_sequences(sequence<mi, ni>{}, c_warp_y_index_zeros),
                         merge_sequences(sequence<1, 1>{}, c_warp_y_lengths));
-                    const uint32_t d0 = bit_cast<uint32_t>(ext_vector_t<bf16_t, 2>{
-                        type_convert<bf16_t>(v[number<0>{}]), type_convert<bf16_t>(v[number<1>{}])});
-                    const uint32_t d1 = bit_cast<uint32_t>(ext_vector_t<bf16_t, 2>{
-                        type_convert<bf16_t>(v[number<2>{}]), type_convert<bf16_t>(v[number<3>{}])});
+                    const uint32_t d0 = bit_cast<uint32_t>(ext_vector_t<CData, 2>{
+                        type_convert<CData>(v[number<0>{}]), type_convert<CData>(v[number<1>{}])});
+                    const uint32_t d1 = bit_cast<uint32_t>(ext_vector_t<CData, 2>{
+                        type_convert<CData>(v[number<2>{}]), type_convert<CData>(v[number<3>{}])});
                     *reinterpret_cast<CK_TILE_LDS_ADDR ext_vector_t<uint32_t, 2> *>(
                         lds + w_off + mi * 32 * kRowStride + ni * 32 * 2) =
                         ext_vector_t<uint32_t, 2>{d0, d1};

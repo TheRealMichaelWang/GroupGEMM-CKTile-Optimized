@@ -50,8 +50,12 @@ many times slower (256x256 tiles spill ~400-700 with this compiler).
   `hipblaslt_grouped` is N/A in bf16. Use `--dtype fp16` for the 3-way comparison.
   Its default heuristic picks a 16x16 tile for these shapes (~90 TFLOPS), which also makes
   fp16 runs slow (~4 min for top3). Use `--backends ck_tile,hipblaslt_loop` to skip it.
-- Current best, top3 bf16: ck_tile ~1555 TFLOPS (1540-1570 per shape) vs hipblaslt_loop ~1427,
-  both at the 1400 W power cap. Pipeline: `ck_kernel/hand_pipeline_asm_s.hpp` (HandPipelineAsmS:
+- Current best, top3 bf16: ck_tile ~1555 TFLOPS (1525-1575 per shape) vs hipblaslt_loop ~1427,
+  both at the 1400 W power cap. Full suite (bf16, 360 cases, same GPU, `results/full_bf16_ck_gpu6.csv`
+  vs `results/full_bf16_hipblaslt_loop.csv`): ck_tile faster in 337/360, geomean 1.69x (the loop's
+  timed region includes a heuristic query per group, as in Primus-Turbo). The 23 losses are
+  single-group shapes with < 256 tiles or 1.4-2 rounds of tiles (hipBLASLt's single-GEMM kernels
+  use stream-K there), plus two within 1%. GPUs differ by ~2%: compare backends on the same GPU. Pipeline: `ck_kernel/hand_pipeline_asm_s.hpp` (HandPipelineAsmS:
   hand-scheduled 4-wave 256x256x64 main loop, inline-asm MFMAs, async global->LDS loads) inside
   `ck_tile::GroupedGemmKernel` (persistent), C stored by `ck_kernel/fast_epilogue.hpp`. CK itself
   is unmodified. Tuning history: `TUNING.md`; quick loop: `scripts/quick.sh`; per-tile cycle
