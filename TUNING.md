@@ -89,3 +89,9 @@ Tools: `scripts/quick.sh` (bf16-only tuning build, ~15 s + ~5 s run), `QUICK_ONL
 - 8-warp CompAsync (4x2, Default epilogue) is correct but ~1000-1050. Persistent + XCD remap: 1379.
 - Our copy of the eight-wave loop (ck_kernel/eight_wave_custom.hpp, generated from CK) reproduces CK exactly (RelaxA=0). Relaxing the end-of-phase A wait (RelaxA=4/8) stays correct but gains <=1% (1397-1409): the wait just moves to the next vmcnt(0) barrier. Deeper prefetch needs more LDS stages than fit at 256x256x64; at K=32 (4 stages fit) the 2x barriers cost more (EW K32 = 1145).
 - RelaxA has no effect in the binary: the compiler re-tightens the end-of-phase wait to vmcnt(4) (no vmcnt(8) emitted). The wait is required: each wave group async-loads HALF of every A tile and the other group reads it right after the barrier. Deeper prefetch needs a 3rd LDS stage (~192 KB at 256x256x64 > 160 KB); duplicating A per group fits only at K=32, where the load-to-use distance stays ~1000 cycles.
+- Newer compiler: upstream clang-24 nightly (apt.llvm.org, LLVM main 2026-09-11),
+  `scripts/build_ck24.sh` builds only the CK kernel with it (-fdelayed-template-parsing needed for a
+  gfx908-only CK body) and links build/tunemax_bench24. Same register allocation (4-wave kernels
+  still split accumulators); best config ~1387 vs ~1400 with amdclang. No gain.
+- 8-warp CompAsync + XOR at K=64: spills 547 VGPRs (~130 TF). Eight-wave pipeline with 2x2 warps:
+  wrong results, ~800 TF.

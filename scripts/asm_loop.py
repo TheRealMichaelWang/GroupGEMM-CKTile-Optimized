@@ -5,9 +5,11 @@ import re, subprocess, sys, os
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ck = "/workspace/rocm-libraries/projects/composablekernel/include"
 os.makedirs("/tmp/asm", exist_ok=True)
-cmd = ["/opt/rocm/bin/amdclang++", "-x", "hip", "--offload-arch=gfx950", "--cuda-device-only", "-S",
+cxx = os.environ.get("TUNEMAX_CXX", "/opt/rocm/bin/amdclang++")
+extra = [] if "amdclang" in cxx else ["--rocm-path=/opt/rocm", "--rocm-device-lib-path=/opt/rocm/amdgcn/bitcode"]
+cmd = [cxx, "-x", "hip", "--offload-arch=gfx950", "--cuda-device-only", "-S",
        "-std=c++20", "-O3", "-fno-offload-uniform-block", "-I", ck, "-I", f"{root}/common",
-       "-I", f"{root}/ck_kernel", f"{root}/ck_kernel/ck_grouped_gemm.cpp", "-o", "/tmp/asm/ck.s"] + sys.argv[1:]
+       "-I", f"{root}/ck_kernel", f"{root}/ck_kernel/ck_grouped_gemm.cpp", "-o", "/tmp/asm/ck.s"] + extra + sys.argv[1:]
 r = subprocess.run(cmd, capture_output=True, text=True)
 if r.returncode:
     print("\n".join(l for l in r.stderr.split("\n") if "error" in l)[:2000]); sys.exit(1)

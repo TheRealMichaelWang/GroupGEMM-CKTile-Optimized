@@ -1,0 +1,2553 @@
+
+---
+events:
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineSystem.cmake:12 (find_program)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_UNAME"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "uname"
+    candidate_directories:
+      - "/opt/rocm/bin/"
+      - "/opt/rocm/sbin/"
+      - "/opt/rocm/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+    searched_directories:
+      - "/opt/rocm/bin/uname"
+      - "/opt/rocm/sbin/uname"
+      - "/opt/rocm/uname"
+      - "/root/.local/bin/uname"
+      - "/opt/rocm/bin/uname"
+      - "/usr/local/sbin/uname"
+      - "/usr/local/bin/uname"
+      - "/usr/sbin/uname"
+    found: "/usr/bin/uname"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineSystem.cmake:212 (message)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      The system is: Linux - 6.8.0-101-generic - x86_64
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeNinjaFindMake.cmake:5 (find_program)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_MAKE_PROGRAM"
+    description: "Program used to build from build.ninja files."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "ninja-build"
+      - "ninja"
+      - "samu"
+    candidate_directories:
+      - "/opt/rocm/bin/"
+      - "/opt/rocm/sbin/"
+      - "/opt/rocm/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+    searched_directories:
+      - "/opt/rocm/bin/ninja-build"
+      - "/opt/rocm/bin/ninja"
+      - "/opt/rocm/bin/samu"
+      - "/opt/rocm/sbin/ninja-build"
+      - "/opt/rocm/sbin/ninja"
+      - "/opt/rocm/sbin/samu"
+      - "/opt/rocm/ninja-build"
+      - "/opt/rocm/ninja"
+      - "/opt/rocm/samu"
+      - "/root/.local/bin/ninja-build"
+      - "/root/.local/bin/ninja"
+      - "/root/.local/bin/samu"
+      - "/opt/rocm/bin/ninja-build"
+      - "/opt/rocm/bin/ninja"
+      - "/opt/rocm/bin/samu"
+      - "/usr/local/sbin/ninja-build"
+      - "/usr/local/sbin/ninja"
+      - "/usr/local/sbin/samu"
+      - "/usr/local/bin/ninja-build"
+      - "/usr/local/bin/ninja"
+      - "/usr/local/bin/samu"
+      - "/usr/sbin/ninja-build"
+      - "/usr/sbin/ninja"
+      - "/usr/sbin/samu"
+      - "/usr/bin/ninja-build"
+    found: "/usr/bin/ninja"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompiler.cmake:115 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:71 (_cmake_find_compiler_path)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER_WITH_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "clang++-24"
+    candidate_directories:
+      - "/opt/rocm/bin/"
+      - "/opt/rocm/sbin/"
+      - "/opt/rocm/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+    searched_directories:
+      - "/opt/rocm/bin/clang++-24"
+      - "/opt/rocm/sbin/clang++-24"
+      - "/opt/rocm/clang++-24"
+      - "/root/.local/bin/clang++-24"
+      - "/opt/rocm/bin/clang++-24"
+      - "/usr/local/sbin/clang++-24"
+      - "/usr/local/bin/clang++-24"
+      - "/usr/sbin/clang++-24"
+    found: "/usr/bin/clang++-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/usr/share/cmake-4.2/Modules/"
+    found: "/usr/share/cmake-4.2/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: /usr/bin/clang++-24 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+      
+      The CXX compiler identification is Clang, found in:
+        /workspace/cktile_tunemax/build24/CMakeFiles/4.2.3/CompilerIdCXX/a.out
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_AR"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-ar-24"
+      - "llvm-ar"
+      - "ar-24"
+      - "ar"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    found: "/usr/bin/llvm-ar-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_RANLIB"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-ranlib-24"
+      - "llvm-ranlib"
+      - "ranlib-24"
+      - "ranlib"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    found: "/usr/bin/llvm-ranlib-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_STRIP"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-strip-24"
+      - "llvm-strip"
+      - "strip-24"
+      - "strip"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    found: "/usr/bin/llvm-strip-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_LINKER"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "ld.lld-24"
+      - "ld.lld"
+      - "ld-24"
+      - "ld"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    found: "/usr/bin/ld.lld-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_NM"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-nm-24"
+      - "llvm-nm"
+      - "nm-24"
+      - "nm"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    found: "/usr/bin/llvm-nm-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_OBJDUMP"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-objdump-24"
+      - "llvm-objdump"
+      - "objdump-24"
+      - "objdump"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    found: "/usr/bin/llvm-objdump-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_OBJCOPY"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-objcopy-24"
+      - "llvm-objcopy"
+      - "objcopy-24"
+      - "objcopy"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    found: "/usr/bin/llvm-objcopy-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_READELF"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-readelf-24"
+      - "llvm-readelf"
+      - "readelf-24"
+      - "readelf"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    found: "/usr/bin/llvm-readelf-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_DLLTOOL"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-dlltool-24"
+      - "llvm-dlltool"
+      - "dlltool-24"
+      - "dlltool"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    found: "/usr/bin/llvm-dlltool-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_ADDR2LINE"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-addr2line-24"
+      - "llvm-addr2line"
+      - "addr2line-24"
+      - "addr2line"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    found: "/usr/bin/llvm-addr2line-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:206 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_TAPI"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "tapi-24"
+      - "tapi"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    searched_directories:
+      - "/usr/bin/tapi-24"
+      - "/root/.local/bin/tapi-24"
+      - "/opt/rocm/bin/tapi-24"
+      - "/usr/local/sbin/tapi-24"
+      - "/usr/local/bin/tapi-24"
+      - "/usr/sbin/tapi-24"
+      - "/sbin/tapi-24"
+      - "/bin/tapi-24"
+      - "/usr/bin/tapi"
+      - "/root/.local/bin/tapi"
+      - "/opt/rocm/bin/tapi"
+      - "/usr/local/sbin/tapi"
+      - "/usr/local/bin/tapi"
+      - "/usr/sbin/tapi"
+      - "/sbin/tapi"
+      - "/bin/tapi"
+    found: false
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/Compiler/Clang-FindBinUtils.cmake:26 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:207 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER_AR"
+    description: "LLVM archiver"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-ar-24.0"
+      - "llvm-ar-24"
+      - "llvm-ar24"
+      - "llvm-ar"
+    candidate_directories:
+      - "/usr/lib/llvm-24/bin/"
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    searched_directories:
+      - "/usr/lib/llvm-24/bin/llvm-ar-24.0"
+      - "/usr/bin/llvm-ar-24.0"
+      - "/root/.local/bin/llvm-ar-24.0"
+      - "/opt/rocm/bin/llvm-ar-24.0"
+      - "/usr/local/sbin/llvm-ar-24.0"
+      - "/usr/local/bin/llvm-ar-24.0"
+      - "/usr/sbin/llvm-ar-24.0"
+      - "/sbin/llvm-ar-24.0"
+      - "/bin/llvm-ar-24.0"
+      - "/usr/lib/llvm-24/bin/llvm-ar-24"
+    found: "/usr/bin/llvm-ar-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/Compiler/Clang-FindBinUtils.cmake:38 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:207 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER_RANLIB"
+    description: "Generate index for LLVM archive"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-ranlib-24.0"
+      - "llvm-ranlib-24"
+      - "llvm-ranlib24"
+      - "llvm-ranlib"
+    candidate_directories:
+      - "/usr/lib/llvm-24/bin/"
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    searched_directories:
+      - "/usr/lib/llvm-24/bin/llvm-ranlib-24.0"
+      - "/usr/bin/llvm-ranlib-24.0"
+      - "/root/.local/bin/llvm-ranlib-24.0"
+      - "/opt/rocm/bin/llvm-ranlib-24.0"
+      - "/usr/local/sbin/llvm-ranlib-24.0"
+      - "/usr/local/bin/llvm-ranlib-24.0"
+      - "/usr/sbin/llvm-ranlib-24.0"
+      - "/sbin/llvm-ranlib-24.0"
+      - "/bin/llvm-ranlib-24.0"
+      - "/usr/lib/llvm-24/bin/llvm-ranlib-24"
+    found: "/usr/bin/llvm-ranlib-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/Compiler/Clang-FindBinUtils.cmake:50 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCXXCompiler.cmake:207 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS"
+    description: "`clang-scan-deps` dependency scanner"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "clang-scan-deps-24.0"
+      - "clang-scan-deps-24"
+      - "clang-scan-deps24"
+      - "clang-scan-deps"
+    candidate_directories:
+      - "/usr/lib/llvm-24/bin/"
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    searched_directories:
+      - "/usr/lib/llvm-24/bin/clang-scan-deps-24.0"
+      - "/usr/bin/clang-scan-deps-24.0"
+      - "/root/.local/bin/clang-scan-deps-24.0"
+      - "/opt/rocm/bin/clang-scan-deps-24.0"
+      - "/usr/local/sbin/clang-scan-deps-24.0"
+      - "/usr/local/bin/clang-scan-deps-24.0"
+      - "/usr/sbin/clang-scan-deps-24.0"
+      - "/sbin/clang-scan-deps-24.0"
+      - "/bin/clang-scan-deps-24.0"
+      - "/usr/lib/llvm-24/bin/clang-scan-deps-24"
+    found: "/usr/bin/clang-scan-deps-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompiler.cmake:115 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineHIPCompiler.cmake:79 (_cmake_find_compiler_path)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_HIP_COMPILER_WITH_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "clang++-24"
+    candidate_directories:
+      - "/opt/rocm/bin/"
+      - "/opt/rocm/sbin/"
+      - "/opt/rocm/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+    searched_directories:
+      - "/opt/rocm/bin/clang++-24"
+      - "/opt/rocm/sbin/clang++-24"
+      - "/opt/rocm/clang++-24"
+      - "/root/.local/bin/clang++-24"
+      - "/opt/rocm/bin/clang++-24"
+      - "/usr/local/sbin/clang++-24"
+      - "/usr/local/bin/clang++-24"
+      - "/usr/sbin/clang++-24"
+    found: "/usr/bin/clang++-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:1303 (message)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineHIPCompiler.cmake:95 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Checking whether the HIP compiler is NVIDIA using "" did not match "nvcc: [^
+      ]+ Cuda compiler driver":
+      Ubuntu clang version 24.0.0 (++20260911085248+58c46bae2118-1~exp1~20260911085258.254)
+      Target: x86_64-pc-linux-gnu
+      Thread model: posix
+      InstalledDir: /usr/lib/llvm-24/bin
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:1290 (message)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineHIPCompiler.cmake:95 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Checking whether the HIP compiler is Clang using "" matched "(clang version)":
+      Ubuntu clang version 24.0.0 (++20260911085248+58c46bae2118-1~exp1~20260911085258.254)
+      Target: x86_64-pc-linux-gnu
+      Thread model: posix
+      InstalledDir: /usr/lib/llvm-24/bin
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineHIPCompiler.cmake:159 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeHIPCompilerId.hip.in"
+    candidate_directories:
+      - "/usr/share/cmake-4.2/Modules/"
+    found: "/usr/share/cmake-4.2/Modules/CMakeHIPCompilerId.hip.in"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineHIPCompiler.cmake:159 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the HIP compiler identification source file "CMakeHIPCompilerId.hip" succeeded.
+      Compiler: /usr/bin/clang++-24 
+      Build flags: 
+      Id flags: -v 
+      
+      The output was:
+      0
+      Ubuntu clang version 24.0.0 (++20260911085248+58c46bae2118-1~exp1~20260911085258.254)
+      Target: x86_64-pc-linux-gnu
+      Thread model: posix
+      InstalledDir: /usr/lib/llvm-24/bin
+      Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/11
+      Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15
+      Selected GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15
+      Candidate multilib: .;@m64
+      Selected multilib: .;@m64
+      Found HIP installation: /opt/rocm, version 7.15.26333
+       "/usr/lib/llvm-24/bin/clang" -cc1 -triple amdgpu9.06-amd-amdhsa -aux-triple x86_64-pc-linux-gnu -Werror=atomic-alignment -emit-llvm-bc -flto=full -flto-unit -dumpdir a- -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeHIPCompilerId.hip -mrelocation-model pic -pic-level 2 -fhalf-no-semantic-interposition -mframe-pointer=all -fno-rounding-math -mconstructor-aliases -funwind-tables=2 -aux-target-cpu x86-64 -fcuda-is-device -fno-threadsafe-statics -mllvm -amdgpu-internalize-symbols -fvisibility=hidden -fapply-global-visibility-to-externs -mlink-builtin-bitcode /opt/rocm/amdgcn/bitcode/ocml.bc -mlink-builtin-bitcode /opt/rocm/amdgcn/bitcode/ockl.bc -mlink-builtin-bitcode /opt/rocm/amdgcn/bitcode/oclc_unsafe_math_off.bc -mlink-builtin-bitcode /opt/rocm/amdgcn/bitcode/oclc_finite_only_off.bc -mlink-builtin-bitcode /opt/rocm/amdgcn/bitcode/oclc_wavefrontsize64_on.bc -mlink-builtin-bitcode /opt/rocm/amdgcn/bitcode/oclc_isa_version_906.bc -mlink-builtin-bitcode /opt/rocm/amdgcn/bitcode/oclc_abi_version_600.bc -debugger-tuning=gdb -fdebug-compilation-dir=/workspace/cktile_tunemax/build24/CMakeFiles/4.2.3/CompilerIdHIP -v -fcoverage-compilation-dir=/workspace/cktile_tunemax/build24/CMakeFiles/4.2.3/CompilerIdHIP -resource-dir /usr/lib/llvm-24/lib/clang/24 -internal-isystem /usr/lib/llvm-24/lib/clang/24/include/cuda_wrappers -idirafter /opt/rocm/include -include __clang_hip_runtime_wrapper.h -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /usr/lib/llvm-24/lib/clang/24/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -internal-isystem /usr/lib/llvm-24/lib/clang/24/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -fdeprecated-macro -fno-autolink -ferror-limit 19 -fhip-new-launch-api -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -cuid=659f4bf59dad330f -fcuda-allow-variadic-functions -faddrsig -fdwarf2-cfi-asm -o /tmp/CMakeHIPCompilerId-gfx906-55eba3.o -x hip CMakeHIPCompilerId.hip
+      clang -cc1 version 24.0.0 based upon LLVM 24.0.0 default target x86_64-pc-linux-gnu
+      ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include"
+      ignoring nonexistent directory "/include"
+      ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include"
+      ignoring nonexistent directory "/include"
+      ignoring duplicate directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15"
+      ignoring duplicate directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15"
+      ignoring duplicate directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward"
+      ignoring duplicate directory "/usr/lib/llvm-24/lib/clang/24/include"
+      ignoring duplicate directory "/usr/local/include"
+      ignoring duplicate directory "/usr/include/x86_64-linux-gnu"
+      ignoring duplicate directory "/usr/include"
+      ignoring duplicate directory "/usr/local/include"
+      ignoring duplicate directory "/usr/lib/llvm-24/lib/clang/24/include"
+      ignoring duplicate directory "/usr/include"
+      #include "..." search starts here:
+      #include <...> search starts here:
+       /usr/lib/llvm-24/lib/clang/24/include/cuda_wrappers
+       /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15
+       /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15
+       /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward
+       /usr/lib/llvm-24/lib/clang/24/include
+       /usr/local/include
+       /usr/include/x86_64-linux-gnu
+       /usr/include
+       /opt/rocm/include
+      End of search list.
+       "/usr/lib/llvm-24/bin/llvm-offload-binary" -o /tmp/CMakeHIPCompilerId-8a84f4.out --image=file=/tmp/CMakeHIPCompilerId-gfx906-55eba3.o,triple=amdgpu9.06-amd-amdhsa,arch=gfx906,kind=hip
+       "/usr/lib/llvm-24/bin/clang-linker-wrapper" --device-compiler=amdgpu-amd-amdhsa=-flto=full --host-triple=x86_64-pc-linux-gnu --linker-path=/usr/lib/llvm-24/bin/clang-offload-bundler --emit-fatbin-only -o /tmp/CMakeHIPCompilerId-ef044f.hipfb /tmp/CMakeHIPCompilerId-8a84f4.out --verbose
+       "/usr/lib/llvm-24/bin/clang" -cc1 -triple x86_64-pc-linux-gnu -aux-triple amdgpu-amd-amdhsa -emit-obj -dumpdir a- -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeHIPCompilerId.hip -mrelocation-model pic -pic-level 2 -pic-is-pie -mframe-pointer=all -fmath-errno -fno-rounding-math -mconstructor-aliases -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic -debugger-tuning=gdb -fdebug-compilation-dir=/workspace/cktile_tunemax/build24/CMakeFiles/4.2.3/CompilerIdHIP -v -fcoverage-compilation-dir=/workspace/cktile_tunemax/build24/CMakeFiles/4.2.3/CompilerIdHIP -resource-dir /usr/lib/llvm-24/lib/clang/24 -internal-isystem /usr/lib/llvm-24/lib/clang/24/include/cuda_wrappers -idirafter /opt/rocm/include -include __clang_hip_runtime_wrapper.h -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /usr/lib/llvm-24/lib/clang/24/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -internal-isystem /usr/lib/llvm-24/lib/clang/24/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -fdeprecated-macro -ferror-limit 19 -fhip-new-launch-api -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -foffload-include-binary /tmp/CMakeHIPCompilerId-ef044f.hipfb -cuid=659f4bf59dad330f -fcuda-allow-variadic-functions -faddrsig -fdwarf2-cfi-asm -o /tmp/CMakeHIPCompilerId-8865e4.o -x hip CMakeHIPCompilerId.hip
+      clang -cc1 version 24.0.0 based upon LLVM 24.0.0 default target x86_64-pc-linux-gnu
+      ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include"
+      ignoring nonexistent directory "/include"
+      ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include"
+      ignoring nonexistent directory "/include"
+      ignoring duplicate directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15"
+      ignoring duplicate directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15"
+      ignoring duplicate directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward"
+      ignoring duplicate directory "/usr/lib/llvm-24/lib/clang/24/include"
+      ignoring duplicate directory "/usr/local/include"
+      ignoring duplicate directory "/usr/include/x86_64-linux-gnu"
+      ignoring duplicate directory "/usr/include"
+      #include "..." search starts here:
+      #include <...> search starts here:
+       /usr/lib/llvm-24/lib/clang/24/include/cuda_wrappers
+       /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15
+       /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15
+       /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward
+       /usr/lib/llvm-24/lib/clang/24/include
+       /usr/local/include
+       /usr/include/x86_64-linux-gnu
+       /usr/include
+       /opt/rocm/include
+      End of search list.
+       "/usr/lib/llvm-24/bin/clang-linker-wrapper" --device-compiler=amdgpu-amd-amdhsa=-v --device-compiler=amdgpu-amd-amdhsa=-flto=full --host-triple=x86_64-pc-linux-gnu --wrapper-verbose --linker-path=/usr/bin/ld -z relro --hash-style=gnu --build-id --eh-frame-hdr -m elf_x86_64 -pie -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o a.out /lib/x86_64-linux-gnu/Scrt1.o /lib/x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64 -L/lib/x86_64-linux-gnu -L/lib/../lib64 -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -L/lib -L/usr/lib /tmp/CMakeHIPCompilerId-8865e4.o /opt/rocm/lib/libamdhip64.so -L/opt/rocm/lib -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /lib/x86_64-linux-gnu/crtn.o --verbose
+       "/usr/bin/ld" -z relro --hash-style=gnu --build-id --eh-frame-hdr -m elf_x86_64 -pie -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o a.out /lib/x86_64-linux-gnu/Scrt1.o /lib/x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L /usr/lib/gcc/x86_64-linux-gnu/15 -L /usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64 -L /lib/x86_64-linux-gnu -L /lib/../lib64 -L /usr/lib/x86_64-linux-gnu -L /usr/lib64 -L /lib -L /usr/lib /tmp/CMakeHIPCompilerId-8865e4.o /opt/rocm/lib/libamdhip64.so -L /opt/rocm/lib -l stdc++ -l m -l gcc_s -l gcc -l c -l gcc_s -l gcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /lib/x86_64-linux-gnu/crtn.o --verbose
+      GNU ld (GNU Binutils for Ubuntu) 2.46
+        Supported emulations:
+         elf_x86_64
+         elf_i386
+         elf32_x86_64
+         elf_iamcu
+         i386pep
+         i386pe
+      using internal linker script:
+      ==================================================
+      /* Script for -pie -z combreloc -z separate-code */
+      /* Copyright (C) 2014-2026 Free Software Foundation, Inc.
+         Copying and distribution of this script, with or without modification,
+         are permitted in any medium without royalty provided the copyright
+         notice and this notice are preserved.  */
+      OUTPUT_FORMAT("elf64-x86-64", "elf64-x86-64", "elf64-x86-64")
+      OUTPUT_ARCH(i386:x86-64)
+      ENTRY(_start)
+      SEARCH_DIR("=/usr/local/lib/x86_64-linux-gnu"); SEARCH_DIR("=/lib/x86_64-linux-gnu"); SEARCH_DIR("=/usr/lib/x86_64-linux-gnu"); SEARCH_DIR("=/usr/lib/x86_64-linux-gnu64"); SEARCH_DIR("=/usr/local/lib64"); SEARCH_DIR("=/lib64"); SEARCH_DIR("=/usr/lib64"); SEARCH_DIR("=/usr/local/lib"); SEARCH_DIR("=/lib"); SEARCH_DIR("=/usr/lib"); SEARCH_DIR("=/usr/x86_64-linux-gnu/lib64"); SEARCH_DIR("=/usr/x86_64-linux-gnu/lib");
+      SECTIONS
+      {
+        PROVIDE (__executable_start = SEGMENT_START("text-segment", 0));
+        . = SEGMENT_START("text-segment", 0) + SIZEOF_HEADERS;
+        /* Place the build-id as close to the ELF headers as possible.  This
+           maximises the chance the build-id will be present in core files,
+           which GDB can then use to locate the associated debuginfo file.  */
+        .note.gnu.build-id  : { *(.note.gnu.build-id) }
+        .interp         : { *(.interp) }
+        .hash           : { *(.hash) }
+        .gnu.hash       : { *(.gnu.hash) }
+        .dynsym         : { *(.dynsym) }
+        .dynstr         : { *(.dynstr) }
+        .gnu.version    : { *(.gnu.version) }
+        .gnu.version_d  : { *(.gnu.version_d) }
+        .gnu.version_r  : { *(.gnu.version_r) }
+        .rela.dyn       :
+          {
+            *(.rela.init)
+            *(.rela.text .rela.text.* .rela.gnu.linkonce.t.*)
+            *(.rela.fini)
+            *(.rela.rodata .rela.rodata.* .rela.gnu.linkonce.r.*)
+            *(.rela.data .rela.data.* .rela.gnu.linkonce.d.*)
+            *(.rela.tdata .rela.tdata.* .rela.gnu.linkonce.td.*)
+            *(.rela.tbss .rela.tbss.* .rela.gnu.linkonce.tb.*)
+            *(.rela.ctors)
+            *(.rela.dtors)
+            *(.rela.got)
+            *(.rela.tls)
+            *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*)
+            *(.rela.ldata .rela.ldata.* .rela.gnu.linkonce.l.*)
+            *(.rela.lbss .rela.lbss.* .rela.gnu.linkonce.lb.*)
+            *(.rela.lrodata .rela.lrodata.* .rela.gnu.linkonce.lr.*)
+            *(.rela.ifunc)
+          }
+        .rela.plt       :
+          {
+            *(.rela.plt)
+            *(.rela.iplt)
+          }
+        .relr.dyn : { *(.relr.dyn) }
+        /* Align the text segment.  */
+        . = ALIGN(CONSTANT (MAXPAGESIZE));
+        /* Start of the executable code region.  */
+        .init           :
+        {
+          KEEP (*(SORT_NONE(.init)))
+        }
+        .plt            : { *(.plt) *(.iplt) }
+      .plt.got        : { *(.plt.got) }
+      .plt.sec        : { *(.plt.sec) }
+        .text           :
+        {
+          *(.text.unlikely .text.*_unlikely .text.unlikely.*)
+          *(.text.exit .text.exit.*)
+          *(.text.startup .text.startup.*)
+          *(.text.hot .text.hot.*)
+          *(SORT(.text.sorted.*))
+          *(.text .stub .text.* .gnu.linkonce.t.*)
+          /* .gnu.warning sections are handled specially by elf.em.  */
+          *(.gnu.warning)
+        }
+        .fini           :
+        {
+          KEEP (*(SORT_NONE(.fini)))
+        }
+        PROVIDE (__etext = .);
+        PROVIDE (_etext = .);
+        PROVIDE (etext = .);
+        /* Align the text segment.  */
+        . = ALIGN(CONSTANT (MAXPAGESIZE));
+        /* Start of the Read Only Data region.  */
+        /* Adjust the address for the rodata segment.  We want to adjust up to
+           the same address within the page on the next page up.  */
+        . = SEGMENT_START("rodata-segment", ALIGN(CONSTANT (MAXPAGESIZE)) + (. & (CONSTANT (MAXPAGESIZE) - 1)));
+        .rodata         : { *(.rodata .rodata.* .gnu.linkonce.r.*) }
+        .rodata1        : { *(.rodata1) }
+        .eh_frame_hdr   : { *(.eh_frame_hdr) *(.eh_frame_entry .eh_frame_entry.*) }
+        .eh_frame       : ONLY_IF_RO { KEEP (*(.eh_frame)) *(.eh_frame.*) }
+        .sframe         : ONLY_IF_RO { KEEP (*(.sframe)) *(.sframe.*) }
+        .gcc_except_table   : ONLY_IF_RO { *(.gcc_except_table .gcc_except_table.*) }
+        .gnu_extab   : ONLY_IF_RO { *(.gnu_extab*) }
+        /* These sections are generated by the Sun/Oracle C++ compiler.  */
+        .exception_ranges   : ONLY_IF_RO { *(.exception_ranges*) }
+        /* Various note sections.  Placed here so that they are always included
+           in the read-only segment and not treated as orphan sections.  The
+           current orphan handling algorithm does place note sections after R/O
+           data, but this is not guaranteed to always be the case.  */
+        .note.build-id :      { *(.note.build-id) }
+        .note.GNU-stack :     { *(.note.GNU-stack) }
+        .note.gnu.property :  { *(.note.gnu.property) }
+        .note.ABI-tag :       { *(.note.ABI-tag) }
+        .note.package :       { *(.note.package) }
+        .note.dlopen :        { *(.note.dlopen) }
+        .note.netbsd.ident :  { *(.note.netbsd.ident) }
+        .note.openbsd.ident : { *(.note.openbsd.ident) }
+        /* Start of the Read Write Data region.  */
+        /* Adjust the address for the data segment.  We want to adjust up to
+           the same address within the page on the next page up.  */
+        . = DATA_SEGMENT_ALIGN (CONSTANT (MAXPAGESIZE), CONSTANT (COMMONPAGESIZE));
+        /* Exception handling.  */
+        .eh_frame       : ONLY_IF_RW { KEEP (*(.eh_frame)) *(.eh_frame.*) }
+        .sframe         : ONLY_IF_RW { KEEP (*(.sframe)) *(.sframe.*) }
+        .gnu_extab      : ONLY_IF_RW { *(.gnu_extab) }
+        .gcc_except_table   : ONLY_IF_RW { *(.gcc_except_table .gcc_except_table.*) }
+        .exception_ranges   : ONLY_IF_RW { *(.exception_ranges*) }
+        /* Thread Local Storage sections.  */
+        .tdata	  :
+         {
+           PROVIDE_HIDDEN (__tdata_start = .);
+           *(.tdata .tdata.* .gnu.linkonce.td.*)
+         }
+        .tbss		  : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) }
+        .preinit_array    :
+        {
+          PROVIDE_HIDDEN (__preinit_array_start = .);
+          KEEP (*(.preinit_array))
+          PROVIDE_HIDDEN (__preinit_array_end = .);
+        }
+        .init_array    :
+        {
+          PROVIDE_HIDDEN (__init_array_start = .);
+          KEEP (*(SORT_BY_INIT_PRIORITY(.init_array.*) SORT_BY_INIT_PRIORITY(.ctors.*)))
+          KEEP (*(.init_array EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .ctors))
+          PROVIDE_HIDDEN (__init_array_end = .);
+        }
+        .fini_array    :
+        {
+          PROVIDE_HIDDEN (__fini_array_start = .);
+          KEEP (*(SORT_BY_INIT_PRIORITY(.fini_array.*) SORT_BY_INIT_PRIORITY(.dtors.*)))
+          KEEP (*(.fini_array EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .dtors))
+          PROVIDE_HIDDEN (__fini_array_end = .);
+        }
+        .ctors          :
+        {
+          /* gcc uses crtbegin.o to find the start of
+             the constructors, so we make sure it is
+             first.  Because this is a wildcard, it
+             doesn't matter if the user does not
+             actually link against crtbegin.o; the
+             linker won't look for a file to match a
+             wildcard.  The wildcard also means that it
+             doesn't matter which directory crtbegin.o
+             is in.  */
+          KEEP (*crtbegin.o(.ctors))
+          KEEP (*crtbegin?.o(.ctors))
+          /* We don't want to include the .ctor section from
+             the crtend.o file until after the sorted ctors.
+             The .ctor section from the crtend file contains the
+             end of ctors marker and it must be last */
+          KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o ) .ctors))
+          KEEP (*(SORT(.ctors.*)))
+          KEEP (*(.ctors))
+        }
+        .dtors          :
+        {
+          KEEP (*crtbegin.o(.dtors))
+          KEEP (*crtbegin?.o(.dtors))
+          KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o ) .dtors))
+          KEEP (*(SORT(.dtors.*)))
+          KEEP (*(.dtors))
+        }
+        .jcr            : { KEEP (*(.jcr)) }
+        .data.rel.ro : { *(.data.rel.ro.local* .gnu.linkonce.d.rel.ro.local.*) *(.data.rel.ro .data.rel.ro.* .gnu.linkonce.d.rel.ro.*) }
+        .dynamic        : { *(.dynamic) }
+        .got            : { *(.got) *(.igot) }
+        . = DATA_SEGMENT_RELRO_END (SIZEOF (.got.plt) >= 24 ? 24 : 0, .);
+        .got.plt        : { *(.got.plt) *(.igot.plt) }
+        .data           :
+        {
+          *(.data .data.* .gnu.linkonce.d.*)
+          SORT(CONSTRUCTORS)
+        }
+        .data1          : { *(.data1) }
+        _edata = .;
+        PROVIDE (edata = .);
+        . = ALIGN(ALIGNOF(NEXT_SECTION));
+        __bss_start = .;
+        .bss            :
+        {
+          *(.dynbss)
+          *(.bss .bss.* .gnu.linkonce.b.*)
+          *(COMMON)
+          /* Align here to ensure that in the common case of there only being one
+             type of .bss section, the section occupies space up to _end.
+             Align after .bss to ensure correct alignment even if the
+             .bss section disappears because there are no input sections.
+             FIXME: Why do we need it? When there is no .bss section, we do not
+             pad the .data section.  */
+            . = ALIGN(. != 0 ? 64 / 8 : 1);
+        }
+          .lbss   :
+          {
+            *(.dynlbss)
+            *(.lbss .lbss.* .gnu.linkonce.lb.*)
+            *(LARGE_COMMON)
+          }
+          . = ALIGN(64 / 8);
+        /* Start of the Large Data region.  */
+        . = SEGMENT_START("ldata-segment", .);
+        .lrodata   ALIGN(CONSTANT (MAXPAGESIZE)) + (. & (CONSTANT (MAXPAGESIZE) - 1)) :
+        {
+          *(.lrodata .lrodata.* .gnu.linkonce.lr.*)
+        }
+        .ldata   ALIGN(CONSTANT (MAXPAGESIZE)) + (. & (CONSTANT (MAXPAGESIZE) - 1)) :
+        {
+          *(.ldata .ldata.* .gnu.linkonce.l.*)
+            . = ALIGN(. != 0 ? 64 / 8 : 1);
+        }
+        . = ALIGN(64 / 8);
+        _end = .;
+        PROVIDE (end = .);
+        . = DATA_SEGMENT_END (.);
+        /* Start of the Tiny Data region.  */
+        /* Stabs debugging sections.  */
+        .stab          0 : { *(.stab) }
+        .stabstr       0 : { *(.stabstr) }
+        .stab.excl     0 : { *(.stab.excl) }
+        .stab.exclstr  0 : { *(.stab.exclstr) }
+        .stab.index    0 : { *(.stab.index) }
+        .stab.indexstr 0 : { *(.stab.indexstr) }
+        .comment 0 (INFO) : { *(.comment); LINKER_VERSION; }
+        .gnu.build.attributes : { *(.gnu.build.attributes .gnu.build.attributes.*) }
+        /* DWARF debug sections.
+           Symbols in the DWARF debugging sections are relative to the beginning
+           of the section so we begin them at 0.  */
+        /* DWARF 1.  */
+        .debug          0 : { *(.debug) }
+        .line           0 : { *(.line) }
+        /* GNU DWARF 1 extensions.  */
+        .debug_srcinfo  0 : { *(.debug_srcinfo) }
+        .debug_sfnames  0 : { *(.debug_sfnames) }
+        /* DWARF 1.1 and DWARF 2.  */
+        .debug_aranges  0 : { *(.debug_aranges) }
+        .debug_pubnames 0 : { *(.debug_pubnames) }
+        /* DWARF 2.  */
+        .debug_info     0 : { *(.debug_info .gnu.linkonce.wi.*) }
+        .debug_abbrev   0 : { *(.debug_abbrev) }
+        .debug_line     0 : { *(.debug_line .debug_line.* .debug_line_end) }
+        .debug_frame    0 : { *(.debug_frame) }
+        .debug_str      0 : { *(.debug_str) }
+        .debug_loc      0 : { *(.debug_loc) }
+        .debug_macinfo  0 : { *(.debug_macinfo) }
+        /* SGI/MIPS DWARF 2 extensions.  */
+        .debug_weaknames 0 : { *(.debug_weaknames) }
+        .debug_funcnames 0 : { *(.debug_funcnames) }
+        .debug_typenames 0 : { *(.debug_typenames) }
+        .debug_varnames  0 : { *(.debug_varnames) }
+        /* DWARF 3.  */
+        .debug_pubtypes 0 : { *(.debug_pubtypes) }
+        .debug_ranges   0 : { *(.debug_ranges) }
+        /* DWARF 5.  */
+        .debug_addr     0 : { *(.debug_addr) }
+        .debug_line_str 0 : { *(.debug_line_str) }
+        .debug_loclists 0 : { *(.debug_loclists) }
+        .debug_macro    0 : { *(.debug_macro) }
+        .debug_names    0 : { *(.debug_names) }
+        .debug_rnglists 0 : { *(.debug_rnglists) }
+        .debug_str_offsets 0 : { *(.debug_str_offsets) }
+        .debug_sup      0 : { *(.debug_sup) }
+        .gnu.attributes 0 : { KEEP (*(.gnu.attributes)) }
+        /DISCARD/ : { *(.note.GNU-stack) *(.gnu_debuglink) *(.gnu.lto_*) *(.gnu_object_only) }
+      }
+      
+      
+      ==================================================
+      /usr/bin/x86_64-linux-gnu-ld.bfd: mode elf_x86_64
+      attempt to open /lib/x86_64-linux-gnu/Scrt1.o succeeded
+      /lib/x86_64-linux-gnu/Scrt1.o
+      attempt to open /lib/x86_64-linux-gnu/crti.o succeeded
+      /lib/x86_64-linux-gnu/crti.o
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o succeeded
+      /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o
+      attempt to open /tmp/CMakeHIPCompilerId-8865e4.o succeeded
+      /tmp/CMakeHIPCompilerId-8865e4.o
+      attempt to open /opt/rocm/lib/libamdhip64.so succeeded
+      /opt/rocm/lib/libamdhip64.so
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libstdc++.so succeeded
+      /usr/lib/gcc/x86_64-linux-gnu/15/libstdc++.so
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libm.so failed
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libm.a failed
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64/libm.so failed
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64/libm.a failed
+      attempt to open /lib/x86_64-linux-gnu/libm.so succeeded
+      opened script file /lib/x86_64-linux-gnu/libm.so
+      /lib/x86_64-linux-gnu/libm.so
+      opened script file /lib/x86_64-linux-gnu/libm.so
+      attempt to open /usr/lib/x86_64-linux-gnu/libm.so.6 succeeded
+      /usr/lib/x86_64-linux-gnu/libm.so.6
+      attempt to open /usr/lib/x86_64-linux-gnu/libmvec.so.1 succeeded
+      /usr/lib/x86_64-linux-gnu/libmvec.so.1
+      /usr/lib/x86_64-linux-gnu/libmvec.so.1
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so succeeded
+      opened script file /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so
+      /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so
+      opened script file /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so.1 failed
+      attempt to open libgcc_s.so.1 failed
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so.1 failed
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64/libgcc_s.so.1 failed
+      attempt to open /lib/x86_64-linux-gnu/libgcc_s.so.1 succeeded
+      /lib/x86_64-linux-gnu/libgcc_s.so.1
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.so failed
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.a succeeded
+      /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.a
+      /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.a
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.so failed
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.a succeeded
+      /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.a
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libc.so failed
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libc.a failed
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64/libc.so failed
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64/libc.a failed
+      attempt to open /lib/x86_64-linux-gnu/libc.so succeeded
+      opened script file /lib/x86_64-linux-gnu/libc.so
+      /lib/x86_64-linux-gnu/libc.so
+      opened script file /lib/x86_64-linux-gnu/libc.so
+      attempt to open /usr/lib/x86_64-linux-gnu/libc.so.6 succeeded
+      /usr/lib/x86_64-linux-gnu/libc.so.6
+      attempt to open /usr/lib/x86_64-linux-gnu/libc_nonshared.a succeeded
+      /usr/lib/x86_64-linux-gnu/libc_nonshared.a
+      attempt to open /lib64/ld-linux-x86-64.so.2 succeeded
+      /lib64/ld-linux-x86-64.so.2
+      /usr/lib/x86_64-linux-gnu/libc_nonshared.a
+      /lib64/ld-linux-x86-64.so.2
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so succeeded
+      opened script file /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so
+      /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so
+      opened script file /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so.1 failed
+      attempt to open libgcc_s.so.1 failed
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so.1 failed
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64/libgcc_s.so.1 failed
+      attempt to open /lib/x86_64-linux-gnu/libgcc_s.so.1 succeeded
+      /lib/x86_64-linux-gnu/libgcc_s.so.1
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.so failed
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.a succeeded
+      /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.a
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.so failed
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.a succeeded
+      /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.a
+      attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o succeeded
+      /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o
+      attempt to open /lib/x86_64-linux-gnu/crtn.o succeeded
+      /lib/x86_64-linux-gnu/crtn.o
+      libdl.so.2 needed by /opt/rocm/lib/libamdhip64.so
+      attempt to open /opt/rocm/lib/rocm_sysdeps/lib/libdl.so.2 failed
+      attempt to open /opt/rocm/lib/llvm/lib/libdl.so.2 failed
+      attempt to open /opt/rocm/lib/libdl.so.2 failed
+      attempt to open /usr/local/lib/libdl.so.2 failed
+      attempt to open /opt/rocm/lib/libdl.so.2 failed
+      attempt to open /usr/local/lib/x86_64-linux-gnu/libdl.so.2 failed
+      found libdl.so.2 at /usr/lib/x86_64-linux-gnu/libdl.so.2
+      librocm_kpack.so.0 needed by /opt/rocm/lib/libamdhip64.so
+      attempt to open /opt/rocm/lib/rocm_sysdeps/lib/librocm_kpack.so.0 failed
+      attempt to open /opt/rocm/lib/llvm/lib/librocm_kpack.so.0 failed
+      found librocm_kpack.so.0 at /opt/rocm/lib/librocm_kpack.so.0
+      librocprofiler-register.so.0 needed by /opt/rocm/lib/libamdhip64.so
+      attempt to open /opt/rocm/lib/rocm_sysdeps/lib/librocprofiler-register.so.0 failed
+      attempt to open /opt/rocm/lib/llvm/lib/librocprofiler-register.so.0 failed
+      found librocprofiler-register.so.0 at /opt/rocm/lib/librocprofiler-register.so.0
+      librt.so.1 needed by /opt/rocm/lib/libamdhip64.so
+      attempt to open /opt/rocm/lib/rocm_sysdeps/lib/librt.so.1 failed
+      attempt to open /opt/rocm/lib/llvm/lib/librt.so.1 failed
+      attempt to open /opt/rocm/lib/librt.so.1 failed
+      attempt to open /usr/local/lib/librt.so.1 failed
+      attempt to open /opt/rocm/lib/librt.so.1 failed
+      attempt to open /usr/local/lib/x86_64-linux-gnu/librt.so.1 failed
+      found librt.so.1 at /usr/lib/x86_64-linux-gnu/librt.so.1
+      libamd_comgr.so.3 needed by /opt/rocm/lib/libamdhip64.so
+      attempt to open /opt/rocm/lib/rocm_sysdeps/lib/libamd_comgr.so.3 failed
+      attempt to open /opt/rocm/lib/llvm/lib/libamd_comgr.so.3 failed
+      found libamd_comgr.so.3 at /opt/rocm/lib/libamd_comgr.so.3
+      libhsa-runtime64.so.1 needed by /opt/rocm/lib/libamdhip64.so
+      attempt to open /opt/rocm/lib/rocm_sysdeps/lib/libhsa-runtime64.so.1 failed
+      attempt to open /opt/rocm/lib/llvm/lib/libhsa-runtime64.so.1 failed
+      found libhsa-runtime64.so.1 at /opt/rocm/lib/libhsa-runtime64.so.1
+      libpthread.so.0 needed by /opt/rocm/lib/libamdhip64.so
+      attempt to open /opt/rocm/lib/rocm_sysdeps/lib/libpthread.so.0 failed
+      attempt to open /opt/rocm/lib/llvm/lib/libpthread.so.0 failed
+      attempt to open /opt/rocm/lib/libpthread.so.0 failed
+      attempt to open /usr/local/lib/libpthread.so.0 failed
+      attempt to open /opt/rocm/lib/libpthread.so.0 failed
+      attempt to open /usr/local/lib/x86_64-linux-gnu/libpthread.so.0 failed
+      found libpthread.so.0 at /usr/lib/x86_64-linux-gnu/libpthread.so.0
+      ld-linux-x86-64.so.2 needed by /opt/rocm/lib/libamdhip64.so
+      found ld-linux-x86-64.so.2 at /lib64/ld-linux-x86-64.so.2
+      librocm_sysdeps_zstd.so.1 needed by /opt/rocm/lib/librocm_kpack.so.0
+      found librocm_sysdeps_zstd.so.1 at /opt/rocm/lib/rocm_sysdeps/lib/librocm_sysdeps_zstd.so.1
+      libclang-cpp.so.23.0git needed by /opt/rocm/lib/libamd_comgr.so.3
+      attempt to open /opt/rocm/lib/libclang-cpp.so.23.0git failed
+      found libclang-cpp.so.23.0git at /opt/rocm/lib/llvm/lib/libclang-cpp.so.23.0git
+      libLLVM.so.23.0git needed by /opt/rocm/lib/libamd_comgr.so.3
+      attempt to open /opt/rocm/lib/libLLVM.so.23.0git failed
+      found libLLVM.so.23.0git at /opt/rocm/lib/llvm/lib/libLLVM.so.23.0git
+      librocm_sysdeps_z.so.1 needed by /opt/rocm/lib/libamd_comgr.so.3
+      attempt to open /opt/rocm/lib/librocm_sysdeps_z.so.1 failed
+      attempt to open /opt/rocm/lib/llvm/lib/librocm_sysdeps_z.so.1 failed
+      found librocm_sysdeps_z.so.1 at /opt/rocm/lib/rocm_sysdeps/lib/librocm_sysdeps_z.so.1
+      librocm_sysdeps_elf.so.1 needed by /opt/rocm/lib/libhsa-runtime64.so.1
+      attempt to open /opt/rocm/lib/librocm_sysdeps_elf.so.1 failed
+      found librocm_sysdeps_elf.so.1 at /opt/rocm/lib/rocm_sysdeps/lib/librocm_sysdeps_elf.so.1
+      librocm_sysdeps_drm.so.2 needed by /opt/rocm/lib/libhsa-runtime64.so.1
+      attempt to open /opt/rocm/lib/librocm_sysdeps_drm.so.2 failed
+      found librocm_sysdeps_drm.so.2 at /opt/rocm/lib/rocm_sysdeps/lib/librocm_sysdeps_drm.so.2
+      librocm_sysdeps_drm_amdgpu.so.1 needed by /opt/rocm/lib/libhsa-runtime64.so.1
+      attempt to open /opt/rocm/lib/librocm_sysdeps_drm_amdgpu.so.1 failed
+      found librocm_sysdeps_drm_amdgpu.so.1 at /opt/rocm/lib/rocm_sysdeps/lib/librocm_sysdeps_drm_amdgpu.so.1
+      librocm_sysdeps_numa.so.1 needed by /opt/rocm/lib/libhsa-runtime64.so.1
+      attempt to open /opt/rocm/lib/librocm_sysdeps_numa.so.1 failed
+      found librocm_sysdeps_numa.so.1 at /opt/rocm/lib/rocm_sysdeps/lib/librocm_sysdeps_numa.so.1
+      librocm_sysdeps_liblzma.so.5 needed by /opt/rocm/lib/rocm_sysdeps/lib/librocm_sysdeps_elf.so.1
+      found librocm_sysdeps_liblzma.so.5 at /opt/rocm/lib/rocm_sysdeps/lib/librocm_sysdeps_liblzma.so.5
+      librocm_sysdeps_bz2.so needed by /opt/rocm/lib/rocm_sysdeps/lib/librocm_sysdeps_elf.so.1
+      found librocm_sysdeps_bz2.so at /opt/rocm/lib/rocm_sysdeps/lib/librocm_sysdeps_bz2.so
+      
+      
+      Compilation of the HIP compiler identification source "CMakeHIPCompilerId.hip" produced "a.out"
+      
+      The HIP compiler identification is Clang, found in:
+        /workspace/cktile_tunemax/build24/CMakeFiles/4.2.3/CompilerIdHIP/a.out
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineHIPCompiler.cmake:211 (message)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Parsed HIP implicit link information from compiler id output:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        ignore line: [Ubuntu clang version 24.0.0 (++20260911085248+58c46bae2118-1~exp1~20260911085258.254)]
+        ignore line: [Target: x86_64-pc-linux-gnu]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: /usr/lib/llvm-24/bin]
+        ignore line: [Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/11]
+        ignore line: [Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15]
+        ignore line: [Selected GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15]
+        ignore line: [Candidate multilib: .]
+        ignore line: [@m64]
+        ignore line: [Selected multilib: .]
+        ignore line: [@m64]
+        ignore line: [Found HIP installation: /opt/rocm  version 7.15.26333]
+        ignore line: [ "/usr/lib/llvm-24/bin/clang" -cc1 -triple amdgpu9.06-amd-amdhsa -aux-triple x86_64-pc-linux-gnu -Werror=atomic-alignment -emit-llvm-bc -flto=full -flto-unit -dumpdir a- -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeHIPCompilerId.hip -mrelocation-model pic -pic-level 2 -fhalf-no-semantic-interposition -mframe-pointer=all -fno-rounding-math -mconstructor-aliases -funwind-tables=2 -aux-target-cpu x86-64 -fcuda-is-device -fno-threadsafe-statics -mllvm -amdgpu-internalize-symbols -fvisibility=hidden -fapply-global-visibility-to-externs -mlink-builtin-bitcode /opt/rocm/amdgcn/bitcode/ocml.bc -mlink-builtin-bitcode /opt/rocm/amdgcn/bitcode/ockl.bc -mlink-builtin-bitcode /opt/rocm/amdgcn/bitcode/oclc_unsafe_math_off.bc -mlink-builtin-bitcode /opt/rocm/amdgcn/bitcode/oclc_finite_only_off.bc -mlink-builtin-bitcode /opt/rocm/amdgcn/bitcode/oclc_wavefrontsize64_on.bc -mlink-builtin-bitcode /opt/rocm/amdgcn/bitcode/oclc_isa_version_906.bc -mlink-builtin-bitcode /opt/rocm/amdgcn/bitcode/oclc_abi_version_600.bc -debugger-tuning=gdb -fdebug-compilation-dir=/workspace/cktile_tunemax/build24/CMakeFiles/4.2.3/CompilerIdHIP -v -fcoverage-compilation-dir=/workspace/cktile_tunemax/build24/CMakeFiles/4.2.3/CompilerIdHIP -resource-dir /usr/lib/llvm-24/lib/clang/24 -internal-isystem /usr/lib/llvm-24/lib/clang/24/include/cuda_wrappers -idirafter /opt/rocm/include -include __clang_hip_runtime_wrapper.h -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /usr/lib/llvm-24/lib/clang/24/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -internal-isystem /usr/lib/llvm-24/lib/clang/24/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -fdeprecated-macro -fno-autolink -ferror-limit 19 -fhip-new-launch-api -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -cuid=659f4bf59dad330f -fcuda-allow-variadic-functions -faddrsig -fdwarf2-cfi-asm -o /tmp/CMakeHIPCompilerId-gfx906-55eba3.o -x hip CMakeHIPCompilerId.hip]
+        ignore line: [clang -cc1 version 24.0.0 based upon LLVM 24.0.0 default target x86_64-pc-linux-gnu]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include"]
+        ignore line: [ignoring nonexistent directory "/include"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include"]
+        ignore line: [ignoring nonexistent directory "/include"]
+        ignore line: [ignoring duplicate directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15"]
+        ignore line: [ignoring duplicate directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15"]
+        ignore line: [ignoring duplicate directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward"]
+        ignore line: [ignoring duplicate directory "/usr/lib/llvm-24/lib/clang/24/include"]
+        ignore line: [ignoring duplicate directory "/usr/local/include"]
+        ignore line: [ignoring duplicate directory "/usr/include/x86_64-linux-gnu"]
+        ignore line: [ignoring duplicate directory "/usr/include"]
+        ignore line: [ignoring duplicate directory "/usr/local/include"]
+        ignore line: [ignoring duplicate directory "/usr/lib/llvm-24/lib/clang/24/include"]
+        ignore line: [ignoring duplicate directory "/usr/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/lib/llvm-24/lib/clang/24/include/cuda_wrappers]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward]
+        ignore line: [ /usr/lib/llvm-24/lib/clang/24/include]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /usr/include/x86_64-linux-gnu]
+        ignore line: [ /usr/include]
+        ignore line: [ /opt/rocm/include]
+        ignore line: [End of search list.]
+        ignore line: [ "/usr/lib/llvm-24/bin/llvm-offload-binary" -o /tmp/CMakeHIPCompilerId-8a84f4.out --image=file=/tmp/CMakeHIPCompilerId-gfx906-55eba3.o triple=amdgpu9.06-amd-amdhsa arch=gfx906 kind=hip]
+        ignore line: [ "/usr/lib/llvm-24/bin/clang-linker-wrapper" --device-compiler=amdgpu-amd-amdhsa=-flto=full --host-triple=x86_64-pc-linux-gnu --linker-path=/usr/lib/llvm-24/bin/clang-offload-bundler --emit-fatbin-only -o /tmp/CMakeHIPCompilerId-ef044f.hipfb /tmp/CMakeHIPCompilerId-8a84f4.out --verbose]
+        ignore line: [ "/usr/lib/llvm-24/bin/clang" -cc1 -triple x86_64-pc-linux-gnu -aux-triple amdgpu-amd-amdhsa -emit-obj -dumpdir a- -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeHIPCompilerId.hip -mrelocation-model pic -pic-level 2 -pic-is-pie -mframe-pointer=all -fmath-errno -fno-rounding-math -mconstructor-aliases -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic -debugger-tuning=gdb -fdebug-compilation-dir=/workspace/cktile_tunemax/build24/CMakeFiles/4.2.3/CompilerIdHIP -v -fcoverage-compilation-dir=/workspace/cktile_tunemax/build24/CMakeFiles/4.2.3/CompilerIdHIP -resource-dir /usr/lib/llvm-24/lib/clang/24 -internal-isystem /usr/lib/llvm-24/lib/clang/24/include/cuda_wrappers -idirafter /opt/rocm/include -include __clang_hip_runtime_wrapper.h -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /usr/lib/llvm-24/lib/clang/24/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -internal-isystem /usr/lib/llvm-24/lib/clang/24/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -fdeprecated-macro -ferror-limit 19 -fhip-new-launch-api -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -foffload-include-binary /tmp/CMakeHIPCompilerId-ef044f.hipfb -cuid=659f4bf59dad330f -fcuda-allow-variadic-functions -faddrsig -fdwarf2-cfi-asm -o /tmp/CMakeHIPCompilerId-8865e4.o -x hip CMakeHIPCompilerId.hip]
+        ignore line: [clang -cc1 version 24.0.0 based upon LLVM 24.0.0 default target x86_64-pc-linux-gnu]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include"]
+        ignore line: [ignoring nonexistent directory "/include"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include"]
+        ignore line: [ignoring nonexistent directory "/include"]
+        ignore line: [ignoring duplicate directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15"]
+        ignore line: [ignoring duplicate directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15"]
+        ignore line: [ignoring duplicate directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward"]
+        ignore line: [ignoring duplicate directory "/usr/lib/llvm-24/lib/clang/24/include"]
+        ignore line: [ignoring duplicate directory "/usr/local/include"]
+        ignore line: [ignoring duplicate directory "/usr/include/x86_64-linux-gnu"]
+        ignore line: [ignoring duplicate directory "/usr/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/lib/llvm-24/lib/clang/24/include/cuda_wrappers]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward]
+        ignore line: [ /usr/lib/llvm-24/lib/clang/24/include]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /usr/include/x86_64-linux-gnu]
+        ignore line: [ /usr/include]
+        ignore line: [ /opt/rocm/include]
+        ignore line: [End of search list.]
+        ignore line: [ "/usr/lib/llvm-24/bin/clang-linker-wrapper" --device-compiler=amdgpu-amd-amdhsa=-v --device-compiler=amdgpu-amd-amdhsa=-flto=full --host-triple=x86_64-pc-linux-gnu --wrapper-verbose --linker-path=/usr/bin/ld -z relro --hash-style=gnu --build-id --eh-frame-hdr -m elf_x86_64 -pie -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o a.out /lib/x86_64-linux-gnu/Scrt1.o /lib/x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64 -L/lib/x86_64-linux-gnu -L/lib/../lib64 -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -L/lib -L/usr/lib /tmp/CMakeHIPCompilerId-8865e4.o /opt/rocm/lib/libamdhip64.so -L/opt/rocm/lib -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /lib/x86_64-linux-gnu/crtn.o --verbose]
+        link line: [ "/usr/bin/ld" -z relro --hash-style=gnu --build-id --eh-frame-hdr -m elf_x86_64 -pie -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o a.out /lib/x86_64-linux-gnu/Scrt1.o /lib/x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L /usr/lib/gcc/x86_64-linux-gnu/15 -L /usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64 -L /lib/x86_64-linux-gnu -L /lib/../lib64 -L /usr/lib/x86_64-linux-gnu -L /usr/lib64 -L /lib -L /usr/lib /tmp/CMakeHIPCompilerId-8865e4.o /opt/rocm/lib/libamdhip64.so -L /opt/rocm/lib -l stdc++ -l m -l gcc_s -l gcc -l c -l gcc_s -l gcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /lib/x86_64-linux-gnu/crtn.o --verbose]
+          arg [/usr/bin/ld] ==> ignore
+          arg [-zrelro] ==> ignore
+          arg [--hash-style=gnu] ==> ignore
+          arg [--build-id] ==> ignore
+          arg [--eh-frame-hdr] ==> ignore
+          arg [-m] ==> ignore
+          arg [elf_x86_64] ==> ignore
+          arg [-pie] ==> ignore
+          arg [-dynamic-linker] ==> ignore
+          arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+          arg [-o] ==> ignore
+          arg [a.out] ==> ignore
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/15] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/15]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64]
+          arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+          arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+          arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+          arg [-L/usr/lib64] ==> dir [/usr/lib64]
+          arg [-L/lib] ==> dir [/lib]
+          arg [-L/usr/lib] ==> dir [/usr/lib]
+          arg [/opt/rocm/lib/libamdhip64.so] ==> ignore
+          arg [-L/opt/rocm/lib] ==> dir [/opt/rocm/lib]
+          arg [-l] ==> ignore
+          arg [stdc++] ==> ignore
+          arg [-l] ==> ignore
+          arg [m] ==> ignore
+          arg [-l] ==> ignore
+          arg [gcc_s] ==> ignore
+          arg [-l] ==> ignore
+          arg [gcc] ==> ignore
+          arg [-l] ==> ignore
+          arg [c] ==> ignore
+          arg [-l] ==> ignore
+          arg [gcc_s] ==> ignore
+          arg [-l] ==> ignore
+          arg [gcc] ==> ignore
+          arg [--verbose] ==> ignore
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/15] ==> [/usr/lib/gcc/x86_64-linux-gnu/15]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64] ==> [/usr/lib64]
+        collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+        collapse library dir [/lib/../lib64] ==> [/lib64]
+        collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib64] ==> [/usr/lib64]
+        collapse library dir [/lib] ==> [/lib]
+        collapse library dir [/usr/lib] ==> [/usr/lib]
+        collapse library dir [/opt/rocm/lib] ==> [/opt/rocm/lib]
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: [/usr/lib/gcc/x86_64-linux-gnu/15;/usr/lib64;/lib/x86_64-linux-gnu;/lib64;/usr/lib/x86_64-linux-gnu;/lib;/usr/lib;/opt/rocm/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineHIPCompiler.cmake:215 (message)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Parsed HIP library architecture from compiler id output: x86_64-linux-gnu
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/Compiler/Clang-FindBinUtils.cmake:26 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineHIPCompiler.cmake:265 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_HIP_COMPILER_AR"
+    description: "LLVM archiver"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-ar-24.0"
+      - "llvm-ar-24"
+      - "llvm-ar24"
+      - "llvm-ar"
+    candidate_directories:
+      - "/usr/lib/llvm-24/bin/"
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    searched_directories:
+      - "/usr/lib/llvm-24/bin/llvm-ar-24.0"
+      - "/usr/bin/llvm-ar-24.0"
+      - "/root/.local/bin/llvm-ar-24.0"
+      - "/opt/rocm/bin/llvm-ar-24.0"
+      - "/usr/local/sbin/llvm-ar-24.0"
+      - "/usr/local/bin/llvm-ar-24.0"
+      - "/usr/sbin/llvm-ar-24.0"
+      - "/sbin/llvm-ar-24.0"
+      - "/bin/llvm-ar-24.0"
+      - "/usr/lib/llvm-24/bin/llvm-ar-24"
+    found: "/usr/bin/llvm-ar-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/Compiler/Clang-FindBinUtils.cmake:38 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineHIPCompiler.cmake:265 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_HIP_COMPILER_RANLIB"
+    description: "Generate index for LLVM archive"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-ranlib-24.0"
+      - "llvm-ranlib-24"
+      - "llvm-ranlib24"
+      - "llvm-ranlib"
+    candidate_directories:
+      - "/usr/lib/llvm-24/bin/"
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    searched_directories:
+      - "/usr/lib/llvm-24/bin/llvm-ranlib-24.0"
+      - "/usr/bin/llvm-ranlib-24.0"
+      - "/root/.local/bin/llvm-ranlib-24.0"
+      - "/opt/rocm/bin/llvm-ranlib-24.0"
+      - "/usr/local/sbin/llvm-ranlib-24.0"
+      - "/usr/local/bin/llvm-ranlib-24.0"
+      - "/usr/sbin/llvm-ranlib-24.0"
+      - "/sbin/llvm-ranlib-24.0"
+      - "/bin/llvm-ranlib-24.0"
+      - "/usr/lib/llvm-24/bin/llvm-ranlib-24"
+    found: "/usr/bin/llvm-ranlib-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/Compiler/Clang-FindBinUtils.cmake:50 (find_program)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineHIPCompiler.cmake:265 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_HIP_COMPILER_CLANG_SCAN_DEPS"
+    description: "`clang-scan-deps` dependency scanner"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "clang-scan-deps-24.0"
+      - "clang-scan-deps-24"
+      - "clang-scan-deps24"
+      - "clang-scan-deps"
+    candidate_directories:
+      - "/usr/lib/llvm-24/bin/"
+      - "/usr/bin/"
+      - "/root/.local/bin/"
+      - "/opt/rocm/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+    searched_directories:
+      - "/usr/lib/llvm-24/bin/clang-scan-deps-24.0"
+      - "/usr/bin/clang-scan-deps-24.0"
+      - "/root/.local/bin/clang-scan-deps-24.0"
+      - "/opt/rocm/bin/clang-scan-deps-24.0"
+      - "/usr/local/sbin/clang-scan-deps-24.0"
+      - "/usr/local/bin/clang-scan-deps-24.0"
+      - "/usr/sbin/clang-scan-deps-24.0"
+      - "/sbin/clang-scan-deps-24.0"
+      - "/bin/clang-scan-deps-24.0"
+      - "/usr/lib/llvm-24/bin/clang-scan-deps-24"
+    found: "/usr/bin/clang-scan-deps-24"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineHIPCompiler.cmake:317 (find_program)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "_CMAKE_HIP_ROCM_AGENT_ENUMERATOR"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "rocm_agent_enumerator"
+    candidate_directories:
+      - "/opt/rocm/bin/"
+      - "/opt/rocm/sbin/"
+      - "/opt/rocm/"
+      - "/opt/rocm/bin/"
+      - "/root/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+    found: "/opt/rocm/bin/rocm_agent_enumerator"
+    search_context:
+      CMAKE_PREFIX_PATH:
+        - "/opt/rocm"
+      ENV{PATH}:
+        - "/root/.local/bin"
+        - "/opt/rocm/bin"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:83 (try_compile)"
+      - "/usr/share/cmake-4.2/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-UW4GiV"
+      binary: "/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-UW4GiV"
+    cmakeVariables:
+      CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS: "/usr/bin/clang-scan-deps-24"
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_HIP_ARCHITECTURES: "gfx950;gfx950;gfx950;gfx950;gfx950;gfx950;gfx950;gfx950"
+      CMAKE_HIP_PLATFORM: "amd"
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-UW4GiV'
+        
+        Run Build Command(s): /usr/bin/ninja -v cmTC_a4617
+        [1/2] /usr/bin/clang++-24   -v -MD -MT CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp
+        Ubuntu clang version 24.0.0 (++20260911085248+58c46bae2118-1~exp1~20260911085258.254)
+        Target: x86_64-pc-linux-gnu
+        Thread model: posix
+        InstalledDir: /usr/lib/llvm-24/bin
+        Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/11
+        Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15
+        Selected GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15
+        Candidate multilib: .;@m64
+        Selected multilib: .;@m64
+        Found HIP installation: /opt/rocm, version 7.15.26333
+         (in-process)
+         "/usr/lib/llvm-24/bin/clang" -cc1 -triple x86_64-pc-linux-gnu -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -pic-is-pie -mframe-pointer=all -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic -debugger-tuning=gdb -fdebug-compilation-dir=/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-UW4GiV -v -fcoverage-compilation-dir=/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-UW4GiV -resource-dir /usr/lib/llvm-24/lib/clang/24 -dependency-file CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o.d -MT CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /usr/lib/llvm-24/lib/clang/24/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -fdeprecated-macro -ferror-limit 19 -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -faddrsig -fdwarf2-cfi-asm -o CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o -x c++ /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp
+        clang -cc1 version 24.0.0 based upon LLVM 24.0.0 default target x86_64-pc-linux-gnu
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include"
+        ignoring nonexistent directory "/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15
+         /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15
+         /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward
+         /usr/lib/llvm-24/lib/clang/24/include
+         /usr/local/include
+         /usr/include/x86_64-linux-gnu
+         /usr/include
+        End of search list.
+        [2/2] : && /usr/bin/clang++-24  -v -Wl,-v CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_a4617   && :
+        Ubuntu clang version 24.0.0 (++20260911085248+58c46bae2118-1~exp1~20260911085258.254)
+        Target: x86_64-pc-linux-gnu
+        Thread model: posix
+        InstalledDir: /usr/lib/llvm-24/bin
+        Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/11
+        Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15
+        Selected GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15
+        Candidate multilib: .;@m64
+        Selected multilib: .;@m64
+        Found HIP installation: /opt/rocm, version 7.15.26333
+         "/usr/bin/ld" -z relro --hash-style=gnu --build-id --eh-frame-hdr -m elf_x86_64 -pie -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_a4617 /lib/x86_64-linux-gnu/Scrt1.o /lib/x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64 -L/lib/x86_64-linux-gnu -L/lib/../lib64 -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -L/lib -L/usr/lib -v CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /lib/x86_64-linux-gnu/crtn.o
+        GNU ld (GNU Binutils for Ubuntu) 2.46
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:217 (message)"
+      - "/usr/share/cmake-4.2/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15]
+          add: [/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15]
+          add: [/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward]
+          add: [/usr/lib/llvm-24/lib/clang/24/include]
+          add: [/usr/local/include]
+          add: [/usr/include/x86_64-linux-gnu]
+          add: [/usr/include]
+        end of search list found
+        collapse include dir [/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15] ==> [/usr/include/c++/15]
+        collapse include dir [/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15] ==> [/usr/include/x86_64-linux-gnu/c++/15]
+        collapse include dir [/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward] ==> [/usr/include/c++/15/backward]
+        collapse include dir [/usr/lib/llvm-24/lib/clang/24/include] ==> [/usr/lib/llvm-24/lib/clang/24/include]
+        collapse include dir [/usr/local/include] ==> [/usr/local/include]
+        collapse include dir [/usr/include/x86_64-linux-gnu] ==> [/usr/include/x86_64-linux-gnu]
+        collapse include dir [/usr/include] ==> [/usr/include]
+        implicit include dirs: [/usr/include/c++/15;/usr/include/x86_64-linux-gnu/c++/15;/usr/include/c++/15/backward;/usr/lib/llvm-24/lib/clang/24/include;/usr/local/include;/usr/include/x86_64-linux-gnu;/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:253 (message)"
+      - "/usr/share/cmake-4.2/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)))("|,| |$)]
+        ignore line: [Change Dir: '/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-UW4GiV']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/bin/ninja -v cmTC_a4617]
+        ignore line: [[1/2] /usr/bin/clang++-24   -v -MD -MT CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Ubuntu clang version 24.0.0 (++20260911085248+58c46bae2118-1~exp1~20260911085258.254)]
+        ignore line: [Target: x86_64-pc-linux-gnu]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: /usr/lib/llvm-24/bin]
+        ignore line: [Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/11]
+        ignore line: [Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15]
+        ignore line: [Selected GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15]
+        ignore line: [Candidate multilib: .]
+        ignore line: [@m64]
+        ignore line: [Selected multilib: .]
+        ignore line: [@m64]
+        ignore line: [Found HIP installation: /opt/rocm  version 7.15.26333]
+        ignore line: [ (in-process)]
+        ignore line: [ "/usr/lib/llvm-24/bin/clang" -cc1 -triple x86_64-pc-linux-gnu -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -pic-is-pie -mframe-pointer=all -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic -debugger-tuning=gdb -fdebug-compilation-dir=/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-UW4GiV -v -fcoverage-compilation-dir=/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-UW4GiV -resource-dir /usr/lib/llvm-24/lib/clang/24 -dependency-file CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o.d -MT CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /usr/lib/llvm-24/lib/clang/24/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -fdeprecated-macro -ferror-limit 19 -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -faddrsig -fdwarf2-cfi-asm -o CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o -x c++ /usr/share/cmake-4.2/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [clang -cc1 version 24.0.0 based upon LLVM 24.0.0 default target x86_64-pc-linux-gnu]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include"]
+        ignore line: [ignoring nonexistent directory "/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15]
+        ignore line: [ /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward]
+        ignore line: [ /usr/lib/llvm-24/lib/clang/24/include]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /usr/include/x86_64-linux-gnu]
+        ignore line: [ /usr/include]
+        ignore line: [End of search list.]
+        ignore line: [[2/2] : && /usr/bin/clang++-24  -v -Wl -v CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_a4617   && :]
+        ignore line: [Ubuntu clang version 24.0.0 (++20260911085248+58c46bae2118-1~exp1~20260911085258.254)]
+        ignore line: [Target: x86_64-pc-linux-gnu]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: /usr/lib/llvm-24/bin]
+        ignore line: [Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/11]
+        ignore line: [Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15]
+        ignore line: [Selected GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15]
+        ignore line: [Candidate multilib: .]
+        ignore line: [@m64]
+        ignore line: [Selected multilib: .]
+        ignore line: [@m64]
+        ignore line: [Found HIP installation: /opt/rocm  version 7.15.26333]
+        link line: [ "/usr/bin/ld" -z relro --hash-style=gnu --build-id --eh-frame-hdr -m elf_x86_64 -pie -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_a4617 /lib/x86_64-linux-gnu/Scrt1.o /lib/x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64 -L/lib/x86_64-linux-gnu -L/lib/../lib64 -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -L/lib -L/usr/lib -v CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /lib/x86_64-linux-gnu/crtn.o]
+          arg [/usr/bin/ld] ==> ignore
+          arg [-zrelro] ==> ignore
+          arg [--hash-style=gnu] ==> ignore
+          arg [--build-id] ==> ignore
+          arg [--eh-frame-hdr] ==> ignore
+          arg [-m] ==> ignore
+          arg [elf_x86_64] ==> ignore
+          arg [-pie] ==> ignore
+          arg [-dynamic-linker] ==> ignore
+          arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_a4617] ==> ignore
+          arg [/lib/x86_64-linux-gnu/Scrt1.o] ==> obj [/lib/x86_64-linux-gnu/Scrt1.o]
+          arg [/lib/x86_64-linux-gnu/crti.o] ==> obj [/lib/x86_64-linux-gnu/crti.o]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/15] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/15]
+          arg [-L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64] ==> dir [/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64]
+          arg [-L/lib/x86_64-linux-gnu] ==> dir [/lib/x86_64-linux-gnu]
+          arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+          arg [-L/usr/lib/x86_64-linux-gnu] ==> dir [/usr/lib/x86_64-linux-gnu]
+          arg [-L/usr/lib64] ==> dir [/usr/lib64]
+          arg [-L/lib] ==> dir [/lib]
+          arg [-L/usr/lib] ==> dir [/usr/lib]
+          arg [-v] ==> ignore
+          arg [CMakeFiles/cmTC_a4617.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [-lstdc++] ==> lib [stdc++]
+          arg [-lm] ==> lib [m]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [-lc] ==> lib [c]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [/usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o] ==> obj [/usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o]
+          arg [/lib/x86_64-linux-gnu/crtn.o] ==> obj [/lib/x86_64-linux-gnu/crtn.o]
+        linker tool for 'CXX': /usr/bin/ld
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/15] ==> [/usr/lib/gcc/x86_64-linux-gnu/15]
+        collapse library dir [/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64] ==> [/usr/lib64]
+        collapse library dir [/lib/x86_64-linux-gnu] ==> [/lib/x86_64-linux-gnu]
+        collapse library dir [/lib/../lib64] ==> [/lib64]
+        collapse library dir [/usr/lib/x86_64-linux-gnu] ==> [/usr/lib/x86_64-linux-gnu]
+        collapse library dir [/usr/lib64] ==> [/usr/lib64]
+        collapse library dir [/lib] ==> [/lib]
+        collapse library dir [/usr/lib] ==> [/usr/lib]
+        implicit libs: [stdc++;m;gcc_s;gcc;c;gcc_s;gcc]
+        implicit objs: [/lib/x86_64-linux-gnu/Scrt1.o;/lib/x86_64-linux-gnu/crti.o;/usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o;/usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o;/lib/x86_64-linux-gnu/crtn.o]
+        implicit dirs: [/usr/lib/gcc/x86_64-linux-gnu/15;/usr/lib64;/lib/x86_64-linux-gnu;/lib64;/usr/lib/x86_64-linux-gnu;/lib;/usr/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "/usr/share/cmake-4.2/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Running the CXX compiler's linker: "/usr/bin/ld" "-v"
+      GNU ld (GNU Binutils for Ubuntu) 2.46
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeDetermineCompilerABI.cmake:83 (try_compile)"
+      - "/usr/share/cmake-4.2/Modules/CMakeTestHIPCompiler.cmake:32 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    checks:
+      - "Detecting HIP compiler ABI info"
+    directories:
+      source: "/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-D5OIpa"
+      binary: "/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-D5OIpa"
+    cmakeVariables:
+      CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS: "/usr/bin/clang-scan-deps-24"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_HIP_ARCHITECTURES: "gfx950;gfx950;gfx950;gfx950;gfx950;gfx950;gfx950;gfx950"
+      CMAKE_HIP_FLAGS: " --cuda-host-only"
+      CMAKE_HIP_FLAGS_DEBUG: "-g -g"
+      CMAKE_HIP_PLATFORM: "amd"
+      CMAKE_HIP_RUNTIME_LIBRARY: "Static"
+    buildResult:
+      variable: "CMAKE_HIP_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-D5OIpa'
+        
+        Run Build Command(s): /usr/bin/ninja -v cmTC_67a1b
+        [1/2] /usr/bin/clang++-24  -D__HIP_ROCclr__=1 -isystem /opt/rocm/core-10.0/include --cuda-host-only  --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950   -v -MD -MT CMakeFiles/cmTC_67a1b.dir/CMakeHIPCompilerABI.hip.o -MF CMakeFiles/cmTC_67a1b.dir/CMakeHIPCompilerABI.hip.o.d -o CMakeFiles/cmTC_67a1b.dir/CMakeHIPCompilerABI.hip.o -x hip -c /usr/share/cmake-4.2/Modules/CMakeHIPCompilerABI.hip
+        Ubuntu clang version 24.0.0 (++20260911085248+58c46bae2118-1~exp1~20260911085258.254)
+        Target: x86_64-pc-linux-gnu
+        Thread model: posix
+        InstalledDir: /usr/lib/llvm-24/bin
+        Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/11
+        Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15
+        Selected GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15
+        Candidate multilib: .;@m64
+        Selected multilib: .;@m64
+        Found HIP installation: /opt/rocm, version 7.15.26333
+         (in-process)
+         "/usr/lib/llvm-24/bin/clang" -cc1 -triple x86_64-pc-linux-gnu -aux-triple amdgpu-amd-amdhsa -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeHIPCompilerABI.hip -mrelocation-model pic -pic-level 2 -pic-is-pie -mframe-pointer=all -fmath-errno -fno-rounding-math -mconstructor-aliases -funwind-tables=2 -target-cpu x86-64 -tune-cpu generic -debugger-tuning=gdb -fdebug-compilation-dir=/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-D5OIpa -v -fcoverage-compilation-dir=/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-D5OIpa -resource-dir /usr/lib/llvm-24/lib/clang/24 -dependency-file CMakeFiles/cmTC_67a1b.dir/CMakeHIPCompilerABI.hip.o.d -MT CMakeFiles/cmTC_67a1b.dir/CMakeHIPCompilerABI.hip.o -sys-header-deps -internal-isystem /usr/lib/llvm-24/lib/clang/24/include/cuda_wrappers -idirafter /opt/rocm/include -include __clang_hip_runtime_wrapper.h -isystem /opt/rocm/core-10.0/include -D __HIP_ROCclr__=1 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15 -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward -internal-isystem /usr/lib/llvm-24/lib/clang/24/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -internal-isystem /usr/lib/llvm-24/lib/clang/24/include -internal-isystem /usr/local/include -internal-isystem /usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include -internal-externc-isystem /usr/include/x86_64-linux-gnu -internal-externc-isystem /include -internal-externc-isystem /usr/include -fdeprecated-macro -ferror-limit 19 -fhip-new-launch-api -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -cuid=63de40b51cc6cfe4 -fcuda-allow-variadic-functions -faddrsig -fdwarf2-cfi-asm -o CMakeFiles/cmTC_67a1b.dir/CMakeHIPCompilerABI.hip.o -x hip /usr/share/cmake-4.2/Modules/CMakeHIPCompilerABI.hip
+        clang -cc1 version 24.0.0 based upon LLVM 24.0.0 default target x86_64-pc-linux-gnu
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include"
+        ignoring nonexistent directory "/include"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../x86_64-linux-gnu/include"
+        ignoring nonexistent directory "/include"
+        ignoring duplicate directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15"
+        ignoring duplicate directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15"
+        ignoring duplicate directory "/usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward"
+        ignoring duplicate directory "/usr/lib/llvm-24/lib/clang/24/include"
+        ignoring duplicate directory "/usr/local/include"
+        ignoring duplicate directory "/usr/include/x86_64-linux-gnu"
+        ignoring duplicate directory "/usr/include"
+        ignoring duplicate directory "/opt/rocm/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /opt/rocm/core-10.0/include
+         /usr/lib/llvm-24/lib/clang/24/include/cuda_wrappers
+         /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15
+         /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/x86_64-linux-gnu/c++/15
+         /usr/lib/gcc/x86_64-linux-gnu/15/../../../../include/c++/15/backward
+         /usr/lib/llvm-24/lib/clang/24/include
+         /usr/local/include
+         /usr/include/x86_64-linux-gnu
+         /usr/include
+        End of search list.
+        [2/2] : && /usr/bin/clang++-24 --cuda-host-only  --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 -v --hip-link --rtlib=compiler-rt -unwindlib=libgcc CMakeFiles/cmTC_67a1b.dir/CMakeHIPCompilerABI.hip.o -o cmTC_67a1b  /opt/rocm/lib/libamdhip64.so.7.15.26333-0000000 && :
+        FAILED: [code=1] cmTC_67a1b 
+        : && /usr/bin/clang++-24 --cuda-host-only  --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 -v --hip-link --rtlib=compiler-rt -unwindlib=libgcc CMakeFiles/cmTC_67a1b.dir/CMakeHIPCompilerABI.hip.o -o cmTC_67a1b  /opt/rocm/lib/libamdhip64.so.7.15.26333-0000000 && :
+        Ubuntu clang version 24.0.0 (++20260911085248+58c46bae2118-1~exp1~20260911085258.254)
+        Target: x86_64-pc-linux-gnu
+        Thread model: posix
+        InstalledDir: /usr/lib/llvm-24/bin
+        Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/11
+        Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15
+        Selected GCC installation: /usr/lib/gcc/x86_64-linux-gnu/15
+        Candidate multilib: .;@m64
+        Selected multilib: .;@m64
+        Found HIP installation: /opt/rocm, version 7.15.26333
+         "/usr/lib/llvm-24/bin/clang-linker-wrapper" --should-extract=gfx950 --device-compiler=amdgpu-amd-amdhsa=-v --device-compiler=amdgpu-amd-amdhsa=-flto=full --host-triple=x86_64-pc-linux-gnu --wrapper-verbose --linker-path=/usr/bin/ld -z relro --hash-style=gnu --build-id --eh-frame-hdr -m elf_x86_64 -pie -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_67a1b /lib/x86_64-linux-gnu/Scrt1.o /lib/x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/15 -L/usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64 -L/lib/x86_64-linux-gnu -L/lib/../lib64 -L/usr/lib/x86_64-linux-gnu -L/usr/lib64 -L/lib -L/usr/lib CMakeFiles/cmTC_67a1b.dir/CMakeHIPCompilerABI.hip.o /opt/rocm/lib/libamdhip64.so.7.15.26333-0000000 /opt/rocm/lib/libamdhip64.so -L/opt/rocm/lib -lstdc++ -lm /usr/lib/llvm-24/lib/clang/24/lib/x86_64-pc-linux-gnu/libclang_rt.builtins.a -lgcc_s -lc /usr/lib/llvm-24/lib/clang/24/lib/x86_64-pc-linux-gnu/libclang_rt.builtins.a -lgcc_s /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /lib/x86_64-linux-gnu/crtn.o --verbose
+         "/usr/bin/ld" -z relro --hash-style=gnu --build-id --eh-frame-hdr -m elf_x86_64 -pie -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_67a1b /lib/x86_64-linux-gnu/Scrt1.o /lib/x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o -L /usr/lib/gcc/x86_64-linux-gnu/15 -L /usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64 -L /lib/x86_64-linux-gnu -L /lib/../lib64 -L /usr/lib/x86_64-linux-gnu -L /usr/lib64 -L /lib -L /usr/lib CMakeFiles/cmTC_67a1b.dir/CMakeHIPCompilerABI.hip.o /opt/rocm/lib/libamdhip64.so.7.15.26333-0000000 /opt/rocm/lib/libamdhip64.so -L /opt/rocm/lib -l stdc++ -l m /usr/lib/llvm-24/lib/clang/24/lib/x86_64-pc-linux-gnu/libclang_rt.builtins.a -l gcc_s -l c /usr/lib/llvm-24/lib/clang/24/lib/x86_64-pc-linux-gnu/libclang_rt.builtins.a -l gcc_s /usr/lib/gcc/x86_64-linux-gnu/15/crtendS.o /lib/x86_64-linux-gnu/crtn.o --verbose
+        GNU ld (GNU Binutils for Ubuntu) 2.46
+          Supported emulations:
+           elf_x86_64
+           elf_i386
+           elf32_x86_64
+           elf_iamcu
+           i386pep
+           i386pe
+        using internal linker script:
+        ==================================================
+        /* Script for -pie -z combreloc -z separate-code */
+        /* Copyright (C) 2014-2026 Free Software Foundation, Inc.
+           Copying and distribution of this script, with or without modification,
+           are permitted in any medium without royalty provided the copyright
+           notice and this notice are preserved.  */
+        OUTPUT_FORMAT("elf64-x86-64", "elf64-x86-64", "elf64-x86-64")
+        OUTPUT_ARCH(i386:x86-64)
+        ENTRY(_start)
+        SEARCH_DIR("=/usr/local/lib/x86_64-linux-gnu"); SEARCH_DIR("=/lib/x86_64-linux-gnu"); SEARCH_DIR("=/usr/lib/x86_64-linux-gnu"); SEARCH_DIR("=/usr/lib/x86_64-linux-gnu64"); SEARCH_DIR("=/usr/local/lib64"); SEARCH_DIR("=/lib64"); SEARCH_DIR("=/usr/lib64"); SEARCH_DIR("=/usr/local/lib"); SEARCH_DIR("=/lib"); SEARCH_DIR("=/usr/lib"); SEARCH_DIR("=/usr/x86_64-linux-gnu/lib64"); SEARCH_DIR("=/usr/x86_64-linux-gnu/lib");
+        SECTIONS
+        {
+          PROVIDE (__executable_start = SEGMENT_START("text-segment", 0));
+          . = SEGMENT_START("text-segment", 0) + SIZEOF_HEADERS;
+          /* Place the build-id as close to the ELF headers as possible.  This
+             maximises the chance the build-id will be present in core files,
+             which GDB can then use to locate the associated debuginfo file.  */
+          .note.gnu.build-id  : { *(.note.gnu.build-id) }
+          .interp         : { *(.interp) }
+          .hash           : { *(.hash) }
+          .gnu.hash       : { *(.gnu.hash) }
+          .dynsym         : { *(.dynsym) }
+          .dynstr         : { *(.dynstr) }
+          .gnu.version    : { *(.gnu.version) }
+          .gnu.version_d  : { *(.gnu.version_d) }
+          .gnu.version_r  : { *(.gnu.version_r) }
+          .rela.dyn       :
+            {
+              *(.rela.init)
+              *(.rela.text .rela.text.* .rela.gnu.linkonce.t.*)
+              *(.rela.fini)
+              *(.rela.rodata .rela.rodata.* .rela.gnu.linkonce.r.*)
+              *(.rela.data .rela.data.* .rela.gnu.linkonce.d.*)
+              *(.rela.tdata .rela.tdata.* .rela.gnu.linkonce.td.*)
+              *(.rela.tbss .rela.tbss.* .rela.gnu.linkonce.tb.*)
+              *(.rela.ctors)
+              *(.rela.dtors)
+              *(.rela.got)
+              *(.rela.tls)
+              *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*)
+              *(.rela.ldata .rela.ldata.* .rela.gnu.linkonce.l.*)
+              *(.rela.lbss .rela.lbss.* .rela.gnu.linkonce.lb.*)
+              *(.rela.lrodata .rela.lrodata.* .rela.gnu.linkonce.lr.*)
+              *(.rela.ifunc)
+            }
+          .rela.plt       :
+            {
+              *(.rela.plt)
+              *(.rela.iplt)
+            }
+          .relr.dyn : { *(.relr.dyn) }
+          /* Align the text segment.  */
+          . = ALIGN(CONSTANT (MAXPAGESIZE));
+          /* Start of the executable code region.  */
+          .init           :
+          {
+            KEEP (*(SORT_NONE(.init)))
+          }
+          .plt            : { *(.plt) *(.iplt) }
+        .plt.got        : { *(.plt.got) }
+        .plt.sec        : { *(.plt.sec) }
+          .text           :
+          {
+            *(.text.unlikely .text.*_unlikely .text.unlikely.*)
+            *(.text.exit .text.exit.*)
+            *(.text.startup .text.startup.*)
+            *(.text.hot .text.hot.*)
+            *(SORT(.text.sorted.*))
+            *(.text .stub .text.* .gnu.linkonce.t.*)
+            /* .gnu.warning sections are handled specially by elf.em.  */
+            *(.gnu.warning)
+          }
+          .fini           :
+          {
+            KEEP (*(SORT_NONE(.fini)))
+          }
+          PROVIDE (__etext = .);
+          PROVIDE (_etext = .);
+          PROVIDE (etext = .);
+          /* Align the text segment.  */
+          . = ALIGN(CONSTANT (MAXPAGESIZE));
+          /* Start of the Read Only Data region.  */
+          /* Adjust the address for the rodata segment.  We want to adjust up to
+             the same address within the page on the next page up.  */
+          . = SEGMENT_START("rodata-segment", ALIGN(CONSTANT (MAXPAGESIZE)) + (. & (CONSTANT (MAXPAGESIZE) - 1)));
+          .rodata         : { *(.rodata .rodata.* .gnu.linkonce.r.*) }
+          .rodata1        : { *(.rodata1) }
+          .eh_frame_hdr   : { *(.eh_frame_hdr) *(.eh_frame_entry .eh_frame_entry.*) }
+          .eh_frame       : ONLY_IF_RO { KEEP (*(.eh_frame)) *(.eh_frame.*) }
+          .sframe         : ONLY_IF_RO { KEEP (*(.sframe)) *(.sframe.*) }
+          .gcc_except_table   : ONLY_IF_RO { *(.gcc_except_table .gcc_except_table.*) }
+          .gnu_extab   : ONLY_IF_RO { *(.gnu_extab*) }
+          /* These sections are generated by the Sun/Oracle C++ compiler.  */
+          .exception_ranges   : ONLY_IF_RO { *(.exception_ranges*) }
+          /* Various note sections.  Placed here so that they are always included
+             in the read-only segment and not treated as orphan sections.  The
+             current orphan handling algorithm does place note sections after R/O
+             data, but this is not guaranteed to always be the case.  */
+          .note.build-id :      { *(.note.build-id) }
+          .note.GNU-stack :     { *(.note.GNU-stack) }
+          .note.gnu.property :  { *(.note.gnu.property) }
+          .note.ABI-tag :       { *(.note.ABI-tag) }
+          .note.package :       { *(.note.package) }
+          .note.dlopen :        { *(.note.dlopen) }
+          .note.netbsd.ident :  { *(.note.netbsd.ident) }
+          .note.openbsd.ident : { *(.note.openbsd.ident) }
+          /* Start of the Read Write Data region.  */
+          /* Adjust the address for the data segment.  We want to adjust up to
+             the same address within the page on the next page up.  */
+          . = DATA_SEGMENT_ALIGN (CONSTANT (MAXPAGESIZE), CONSTANT (COMMONPAGESIZE));
+          /* Exception handling.  */
+          .eh_frame       : ONLY_IF_RW { KEEP (*(.eh_frame)) *(.eh_frame.*) }
+          .sframe         : ONLY_IF_RW { KEEP (*(.sframe)) *(.sframe.*) }
+          .gnu_extab      : ONLY_IF_RW { *(.gnu_extab) }
+          .gcc_except_table   : ONLY_IF_RW { *(.gcc_except_table .gcc_except_table.*) }
+          .exception_ranges   : ONLY_IF_RW { *(.exception_ranges*) }
+          /* Thread Local Storage sections.  */
+          .tdata	  :
+           {
+             PROVIDE_HIDDEN (__tdata_start = .);
+             *(.tdata .tdata.* .gnu.linkonce.td.*)
+           }
+          .tbss		  : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) }
+          .preinit_array    :
+          {
+            PROVIDE_HIDDEN (__preinit_array_start = .);
+            KEEP (*(.preinit_array))
+            PROVIDE_HIDDEN (__preinit_array_end = .);
+          }
+          .init_array    :
+          {
+            PROVIDE_HIDDEN (__init_array_start = .);
+            KEEP (*(SORT_BY_INIT_PRIORITY(.init_array.*) SORT_BY_INIT_PRIORITY(.ctors.*)))
+            KEEP (*(.init_array EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .ctors))
+            PROVIDE_HIDDEN (__init_array_end = .);
+          }
+          .fini_array    :
+          {
+            PROVIDE_HIDDEN (__fini_array_start = .);
+            KEEP (*(SORT_BY_INIT_PRIORITY(.fini_array.*) SORT_BY_INIT_PRIORITY(.dtors.*)))
+            KEEP (*(.fini_array EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .dtors))
+            PROVIDE_HIDDEN (__fini_array_end = .);
+          }
+          .ctors          :
+          {
+            /* gcc uses crtbegin.o to find the start of
+               the constructors, so we make sure it is
+               first.  Because this is a wildcard, it
+               doesn't matter if the user does not
+               actually link against crtbegin.o; the
+               linker won't look for a file to match a
+               wildcard.  The wildcard also means that it
+               doesn't matter which directory crtbegin.o
+               is in.  */
+            KEEP (*crtbegin.o(.ctors))
+            KEEP (*crtbegin?.o(.ctors))
+            /* We don't want to include the .ctor section from
+               the crtend.o file until after the sorted ctors.
+               The .ctor section from the crtend file contains the
+               end of ctors marker and it must be last */
+            KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o ) .ctors))
+            KEEP (*(SORT(.ctors.*)))
+            KEEP (*(.ctors))
+          }
+          .dtors          :
+          {
+            KEEP (*crtbegin.o(.dtors))
+            KEEP (*crtbegin?.o(.dtors))
+            KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o ) .dtors))
+            KEEP (*(SORT(.dtors.*)))
+            KEEP (*(.dtors))
+          }
+          .jcr            : { KEEP (*(.jcr)) }
+          .data.rel.ro : { *(.data.rel.ro.local* .gnu.linkonce.d.rel.ro.local.*) *(.data.rel.ro .data.rel.ro.* .gnu.linkonce.d.rel.ro.*) }
+          .dynamic        : { *(.dynamic) }
+          .got            : { *(.got) *(.igot) }
+          . = DATA_SEGMENT_RELRO_END (SIZEOF (.got.plt) >= 24 ? 24 : 0, .);
+          .got.plt        : { *(.got.plt) *(.igot.plt) }
+          .data           :
+          {
+            *(.data .data.* .gnu.linkonce.d.*)
+            SORT(CONSTRUCTORS)
+          }
+          .data1          : { *(.data1) }
+          _edata = .;
+          PROVIDE (edata = .);
+          . = ALIGN(ALIGNOF(NEXT_SECTION));
+          __bss_start = .;
+          .bss            :
+          {
+            *(.dynbss)
+            *(.bss .bss.* .gnu.linkonce.b.*)
+            *(COMMON)
+            /* Align here to ensure that in the common case of there only being one
+               type of .bss section, the section occupies space up to _end.
+               Align after .bss to ensure correct alignment even if the
+               .bss section disappears because there are no input sections.
+               FIXME: Why do we need it? When there is no .bss section, we do not
+               pad the .data section.  */
+              . = ALIGN(. != 0 ? 64 / 8 : 1);
+          }
+            .lbss   :
+            {
+              *(.dynlbss)
+              *(.lbss .lbss.* .gnu.linkonce.lb.*)
+              *(LARGE_COMMON)
+            }
+            . = ALIGN(64 / 8);
+          /* Start of the Large Data region.  */
+          . = SEGMENT_START("ldata-segment", .);
+          .lrodata   ALIGN(CONSTANT (MAXPAGESIZE)) + (. & (CONSTANT (MAXPAGESIZE) - 1)) :
+          {
+            *(.lrodata .lrodata.* .gnu.linkonce.lr.*)
+          }
+          .ldata   ALIGN(CONSTANT (MAXPAGESIZE)) + (. & (CONSTANT (MAXPAGESIZE) - 1)) :
+          {
+            *(.ldata .ldata.* .gnu.linkonce.l.*)
+              . = ALIGN(. != 0 ? 64 / 8 : 1);
+          }
+          . = ALIGN(64 / 8);
+          _end = .;
+          PROVIDE (end = .);
+          . = DATA_SEGMENT_END (.);
+          /* Start of the Tiny Data region.  */
+          /* Stabs debugging sections.  */
+          .stab          0 : { *(.stab) }
+          .stabstr       0 : { *(.stabstr) }
+          .stab.excl     0 : { *(.stab.excl) }
+          .stab.exclstr  0 : { *(.stab.exclstr) }
+          .stab.index    0 : { *(.stab.index) }
+          .stab.indexstr 0 : { *(.stab.indexstr) }
+          .comment 0 (INFO) : { *(.comment); LINKER_VERSION; }
+          .gnu.build.attributes : { *(.gnu.build.attributes .gnu.build.attributes.*) }
+          /* DWARF debug sections.
+             Symbols in the DWARF debugging sections are relative to the beginning
+             of the section so we begin them at 0.  */
+          /* DWARF 1.  */
+          .debug          0 : { *(.debug) }
+          .line           0 : { *(.line) }
+          /* GNU DWARF 1 extensions.  */
+          .debug_srcinfo  0 : { *(.debug_srcinfo) }
+          .debug_sfnames  0 : { *(.debug_sfnames) }
+          /* DWARF 1.1 and DWARF 2.  */
+          .debug_aranges  0 : { *(.debug_aranges) }
+          .debug_pubnames 0 : { *(.debug_pubnames) }
+          /* DWARF 2.  */
+          .debug_info     0 : { *(.debug_info .gnu.linkonce.wi.*) }
+          .debug_abbrev   0 : { *(.debug_abbrev) }
+          .debug_line     0 : { *(.debug_line .debug_line.* .debug_line_end) }
+          .debug_frame    0 : { *(.debug_frame) }
+          .debug_str      0 : { *(.debug_str) }
+          .debug_loc      0 : { *(.debug_loc) }
+          .debug_macinfo  0 : { *(.debug_macinfo) }
+          /* SGI/MIPS DWARF 2 extensions.  */
+          .debug_weaknames 0 : { *(.debug_weaknames) }
+          .debug_funcnames 0 : { *(.debug_funcnames) }
+          .debug_typenames 0 : { *(.debug_typenames) }
+          .debug_varnames  0 : { *(.debug_varnames) }
+          /* DWARF 3.  */
+          .debug_pubtypes 0 : { *(.debug_pubtypes) }
+          .debug_ranges   0 : { *(.debug_ranges) }
+          /* DWARF 5.  */
+          .debug_addr     0 : { *(.debug_addr) }
+          .debug_line_str 0 : { *(.debug_line_str) }
+          .debug_loclists 0 : { *(.debug_loclists) }
+          .debug_macro    0 : { *(.debug_macro) }
+          .debug_names    0 : { *(.debug_names) }
+          .debug_rnglists 0 : { *(.debug_rnglists) }
+          .debug_str_offsets 0 : { *(.debug_str_offsets) }
+          .debug_sup      0 : { *(.debug_sup) }
+          .gnu.attributes 0 : { KEEP (*(.gnu.attributes)) }
+          /DISCARD/ : { *(.note.GNU-stack) *(.gnu_debuglink) *(.gnu.lto_*) *(.gnu_object_only) }
+        }
+        
+        
+        ==================================================
+        /usr/bin/x86_64-linux-gnu-ld.bfd: mode elf_x86_64
+        attempt to open /lib/x86_64-linux-gnu/Scrt1.o succeeded
+        /lib/x86_64-linux-gnu/Scrt1.o
+        attempt to open /lib/x86_64-linux-gnu/crti.o succeeded
+        /lib/x86_64-linux-gnu/crti.o
+        attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o succeeded
+        /usr/lib/gcc/x86_64-linux-gnu/15/crtbeginS.o
+        attempt to open CMakeFiles/cmTC_67a1b.dir/CMakeHIPCompilerABI.hip.o succeeded
+        CMakeFiles/cmTC_67a1b.dir/CMakeHIPCompilerABI.hip.o
+        attempt to open /opt/rocm/lib/libamdhip64.so.7.15.26333-0000000 succeeded
+        /opt/rocm/lib/libamdhip64.so.7.15.26333-0000000
+        attempt to open /opt/rocm/lib/libamdhip64.so succeeded
+        /opt/rocm/lib/libamdhip64.so
+        attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libstdc++.so succeeded
+        /usr/lib/gcc/x86_64-linux-gnu/15/libstdc++.so
+        attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libm.so failed
+        attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libm.a failed
+        attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64/libm.so failed
+        attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64/libm.a failed
+        attempt to open /lib/x86_64-linux-gnu/libm.so succeeded
+        opened script file /lib/x86_64-linux-gnu/libm.so
+        /lib/x86_64-linux-gnu/libm.so
+        opened script file /lib/x86_64-linux-gnu/libm.so
+        attempt to open /usr/lib/x86_64-linux-gnu/libm.so.6 succeeded
+        /usr/lib/x86_64-linux-gnu/libm.so.6
+        attempt to open /usr/lib/x86_64-linux-gnu/libmvec.so.1 succeeded
+        /usr/lib/x86_64-linux-gnu/libmvec.so.1
+        /usr/lib/x86_64-linux-gnu/libmvec.so.1
+        attempt to open /usr/lib/llvm-24/lib/clang/24/lib/x86_64-pc-linux-gnu/libclang_rt.builtins.a failed
+        /usr/bin/x86_64-linux-gnu-ld.bfd: cannot find /usr/lib/llvm-24/lib/clang/24/lib/x86_64-pc-linux-gnu/libclang_rt.builtins.a: No such file or directory
+        attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so succeeded
+        opened script file /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so
+        /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so
+        opened script file /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so
+        attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so.1 failed
+        attempt to open libgcc_s.so.1 failed
+        attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so.1 failed
+        attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/../../../../lib64/libgcc_s.so.1 failed
+        attempt to open /lib/x86_64-linux-gnu/libgcc_s.so.1 succeeded
+        /lib/x86_64-linux-gnu/libgcc_s.so.1
+        attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.so failed
+        attempt to open /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.a succeeded
+        /usr/lib/gcc/x86_64-linux-gnu/15/libgcc.a
+        /usr/lib/llvm-24/bin/clang-linker-wrapper: error: 'ld' failed
+        clang++-24: error: linker command failed with exit code 1 (use -v to see invocation)
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake-4.2/Modules/CMakeTestHIPCompiler.cmake:62 (try_compile)"
+      - "CMakeLists.txt:2 (project)"
+    checks:
+      - "Check for working HIP compiler: /usr/bin/clang++-24"
+    directories:
+      source: "/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-mRNpuG"
+      binary: "/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-mRNpuG"
+    cmakeVariables:
+      CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS: "/usr/bin/clang-scan-deps-24"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_HIP_ARCHITECTURES: "gfx950;gfx950;gfx950;gfx950;gfx950;gfx950;gfx950;gfx950"
+      CMAKE_HIP_FLAGS: " --cuda-host-only"
+      CMAKE_HIP_FLAGS_DEBUG: "-g -g"
+      CMAKE_HIP_PLATFORM: "amd"
+    buildResult:
+      variable: "CMAKE_HIP_COMPILER_WORKS"
+      cached: true
+      stdout: |
+        Change Dir: '/workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-mRNpuG'
+        
+        Run Build Command(s): /usr/bin/ninja -v cmTC_00baa
+        [1/2] /usr/bin/clang++-24  -D__HIP_ROCclr__=1 -isystem /opt/rocm/core-10.0/include --cuda-host-only  --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 -MD -MT CMakeFiles/cmTC_00baa.dir/testHIPCompiler.hip.o -MF CMakeFiles/cmTC_00baa.dir/testHIPCompiler.hip.o.d -o CMakeFiles/cmTC_00baa.dir/testHIPCompiler.hip.o -x hip -c /workspace/cktile_tunemax/build24/CMakeFiles/CMakeScratch/TryCompile-mRNpuG/testHIPCompiler.hip
+        [2/2] : && /usr/bin/clang++-24 --cuda-host-only  --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --hip-link --rtlib=compiler-rt -unwindlib=libgcc CMakeFiles/cmTC_00baa.dir/testHIPCompiler.hip.o -o cmTC_00baa  /opt/rocm/lib/libamdhip64.so.7.15.26333-0000000 && :
+        FAILED: [code=1] cmTC_00baa 
+        : && /usr/bin/clang++-24 --cuda-host-only  --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --offload-arch=gfx950 --hip-link --rtlib=compiler-rt -unwindlib=libgcc CMakeFiles/cmTC_00baa.dir/testHIPCompiler.hip.o -o cmTC_00baa  /opt/rocm/lib/libamdhip64.so.7.15.26333-0000000 && :
+        /usr/bin/x86_64-linux-gnu-ld.bfd: cannot find /usr/lib/llvm-24/lib/clang/24/lib/x86_64-pc-linux-gnu/libclang_rt.builtins.a: No such file or directory
+        /usr/lib/llvm-24/bin/clang-linker-wrapper: error: 'ld' failed
+        clang++-24: error: linker command failed with exit code 1 (use -v to see invocation)
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+...
