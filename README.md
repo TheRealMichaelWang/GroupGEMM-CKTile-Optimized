@@ -55,7 +55,8 @@ many times slower (256x256 tiles spill ~400-700 with this compiler).
   vs `results/full_bf16_hipblaslt_loop.csv`): ck_tile faster in 337/360, geomean 1.69x (the loop's
   timed region includes a heuristic query per group, as in Primus-Turbo). The 23 losses are
   single-group shapes with < 256 tiles or 1.4-2 rounds of tiles (hipBLASLt's single-GEMM kernels
-  use stream-K there), plus two within 1%. GPUs differ by ~2%: compare backends on the same GPU. Pipeline: `ck_kernel/hand_pipeline_asm_s.hpp` (HandPipelineAsmS:
+  use stream-K there), plus two within 1%. GPUs differ by ~2%: compare backends on the same GPU.
+  fp16 top3 (full build, `--dtype fp16`): ck_tile ~1472 vs hipblaslt_loop ~1386. Pipeline: `ck_kernel/hand_pipeline_asm_s.hpp` (HandPipelineAsmS:
   hand-scheduled 4-wave 256x256x64 main loop, inline-asm MFMAs, async global->LDS loads) inside
   `ck_tile::GroupedGemmKernel` (persistent), C stored by `ck_kernel/fast_epilogue.hpp`. CK itself
   is unmodified. Tuning history: `TUNING.md`; quick loop: `scripts/quick.sh`; per-tile cycle
