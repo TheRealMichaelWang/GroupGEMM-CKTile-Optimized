@@ -22,8 +22,10 @@ public:
             std::fprintf(stderr, "hipblasLtCreate failed\n");
             std::exit(1);
         }
-        TUNEMAX_HIP_CHECK(
-            hipMalloc(&workspace_, primus_turbo::get_hipblaslt_grouped_gemm_workspace_size()));
+        const size_t ws = primus_turbo::get_hipblaslt_grouped_gemm_workspace_size();
+        TUNEMAX_HIP_CHECK(hipMalloc(&workspace_, ws));
+        // hipBLASLt stream-K kernels keep flags in the workspace; start from zeros.
+        TUNEMAX_HIP_CHECK(hipMemset(workspace_, 0, ws));
     }
 
     ~HipblasltLoopBackend() override {
