@@ -34,9 +34,13 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
     // MFMA index in row 7 before which the end-of-tile barrier sits
     static constexpr index_t kBarIdx = TUNEMAX_BAR_IDX;
 #ifndef TUNEMAX_A_PER_ROW
-#define TUNEMAX_A_PER_ROW 2
+#define TUNEMAX_A_PER_ROW 4
 #endif
     static constexpr index_t kAPerRow = TUNEMAX_A_PER_ROW;
+    // Unpadded instances (whose C goes through tunemax::FastEpilogue) compute C^T per MFMA tile
+    // (operands swapped): each lane then holds 4 consecutive columns of one row, which the
+    // epilogue stores without a transpose. Padded instances keep CK's C layout.
+    static constexpr bool kTransposedAcc = !Problem::kPadM && !Problem::kPadN && !Problem::kPadK;
 #ifndef TUNEMAX_B_OFF
 #define TUNEMAX_B_OFF 1
 #endif
@@ -189,13 +193,19 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
                         s_waitcnt_barrier<waitcnt_arg::kMaxVmCnt, waitcnt_arg::kMaxExpCnt, 0>();
                     if constexpr (mi == 7 && idx == kBarIdx) // loads of rows 4-6 + row 7 so far may fly
                         s_waitcnt_barrier<6 + (kBarIdx > kBOff) + (kBarIdx > 8 + kBOff), waitcnt_arg::kMaxExpCnt, 0>();
-                    mfma(acc[mi][ni], fa[mi % 2][kh], fb[buf][ni][kh]);
+                    if constexpr (kTransposedAcc)
+                        mfma(acc[mi][ni], fb[buf][ni][kh], fa[mi % 2][kh]);
+                    else
+                        mfma(acc[mi][ni], fa[mi % 2][kh], fb[buf][ni][kh]);
                     __builtin_amdgcn_sched_barrier(0);
                     // loads after MFMA 0 and 8
                     // A(kt+1): kAPerRow loads per row from row 0; B(kt+3): 2 per row in rows 4-7
-                    if constexpr (mi * kAPerRow < kLoads && idx % (16 / kAPerRow) == 0)
-                        issue_load(rsrc_a, s ^ 1, number<mi * kAPerRow + idx / (16 / kAPerRow)>{},
-                                   number<0>{});
+                    // (4 per row: after MFMAs 0, 5, 8, 13, which hold no LDS read)
+                    constexpr index_t a_slot =
+                        kAPerRow == 2 ? (idx == 0 ? 0 : idx == 8 ? 1 : -1)
+                                      : (idx == 0 ? 0 : idx == 5 ? 1 : idx == 8 ? 2 : idx == 13 ? 3 : -1);
+                    if constexpr (mi * kAPerRow < kLoads && a_slot >= 0)
+                        issue_load(rsrc_a, s ^ 1, number<mi * kAPerRow + a_slot>{}, number<0>{});
                     if constexpr (mi >= 4 && idx % 8 == kBOff)
                         issue_load(rsrc_b, s ^ 1, number<(mi - 4) * 2 + idx / 8>{}, number<1>{});
                     // next A row (or next tile's row 0 in row 7) after MFMA 2 and 4

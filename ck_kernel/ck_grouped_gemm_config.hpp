@@ -60,7 +60,8 @@ struct CkTileConfig {
     // Cache policy for C stores (coherence_epilogue.hpp): kStoreDefault, kStoreNT (non-temporal,
     // C is never re-read, like hipBLASLt's NTC/NTD), kStoreDeviceNT, kStoreSystemNT.
     static constexpr int CStoreMode = kStoreNT;
-    // FastEpilogue: our C epilogue for the hand pipelines (fast_epilogue.hpp), CStoreMode applies.
+    // FastEpilogue: our C epilogue (fast_epilogue.hpp), CStoreMode applies. Only for
+    // HandPipelineAsmS, whose unpadded instances keep C^T per MFMA tile (kTransposedAcc).
     static constexpr bool FastEpilogue = true;
 
     // Async: global->LDS loads that bypass registers (gfx950). VectorSize: max global load

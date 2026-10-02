@@ -1,11 +1,12 @@
-// C epilogue for the hand pipelines (4 waves 2x2, 16x16 MFMA accumulators, full tiles).
+// C epilogue for the hand pipelines (4 waves 2x2, 16x16 MFMA accumulators holding C^T, full
+// tiles; see HandPipelineAsmS::kTransposedAcc).
 //
 // CK's CShuffleEpilogue moves the 256x256 C tile through LDS in many small rounds (2-byte
 // LDS writes, a barrier and an LDS wait per round), ~8% of the kernel time. Here:
-//   1. each lane's 4 accumulator rows (one column) are converted to bf16 and transposed
-//      inside each lane quad with DPP, so lane j of a quad holds one row x 4 columns;
+//   1. the hand pipelines compute C^T per 16x16 MFMA tile (swapped operands), so each lane
+//      holds 4 consecutive columns of one row; converted to bf16 they are 8 contiguous bytes;
 //   2. one ds_write_b64 per 16x16 MFMA tile stages the whole C tile in LDS, row major
-//      (row stride 528 B);
+//      (row stride 528 B, conflict free);
 //   3. one barrier, then each wave streams 64 full rows (512 B) out with ds_read_b128 +
 //      buffer_store_dwordx4, with the chosen cache policy.
 // Padded instances, atomic (split-K) windows and other dtypes fall back to the base epilogue.
@@ -51,36 +52,22 @@ struct FastEpilogue : public BaseEpilogue {
             const index_t j  = lane % 4; // position in the lane quad
             auto *lds = (CK_TILE_LDS_ADDR uint8_t *)smem;
 
-            // after the transpose lane holds row (lane/16)*4 + j, columns (lane%16 & ~3) .. +3
-            const index_t w_off = (wm * 16 + (lane / 16) * 4 + j) * kRowStride +
-                                  (wn * 16 + (lane % 16) - j) * 2;
-            // byte selectors for the 16-bit interleave of step 2
-            const uint32_t sel = (j & 1) ? 0x03020706u : 0x05040100u;
-
+            // Accumulators hold C^T per 16x16 MFMA tile (hand pipelines swap the MFMA operands
+            // in unpadded instances): lane l has row l%16, columns (l/16)*4 .. +3.
+            // Row stride 528 B: the 32 lanes of a half wave hit 64 distinct banks.
+            const index_t w_off = (wm * 16 + lane % 16) * kRowStride + (wn * 16 + (lane / 16) * 4) * 2;
             static_for<0, 8, 1>{}([&](auto mi) {
                 static_for<0, 8, 1>{}([&](auto ni) {
                     const auto v = c_tile.get_y_sliced_thread_data(
                         merge_sequences(sequence<mi, ni>{}, c_warp_y_index_zeros),
                         merge_sequences(sequence<1, 1>{}, c_warp_y_lengths));
-                    const F4 f{v[number<0>{}], v[number<1>{}], v[number<2>{}], v[number<3>{}]};
-                    // d0 = rows 0,1; d1 = rows 2,3 of this lane's column
-                    uint32_t d0 = bit_cast<uint32_t>(
-                        ext_vector_t<bf16_t, 2>{type_convert<bf16_t>(f[0]), type_convert<bf16_t>(f[1])});
-                    uint32_t d1 = bit_cast<uint32_t>(
-                        ext_vector_t<bf16_t, 2>{type_convert<bf16_t>(f[2]), type_convert<bf16_t>(f[3])});
-                    // step 1: lanes 0,1 swap their d1 with the d0 of lanes 2,3
-                    const uint32_t send = (j < 2) ? d1 : d0;
-                    const uint32_t recv = __builtin_amdgcn_mov_dpp(send, 0x4e, 0xf, 0xf, true); // [2,3,0,1]
-                    if (j < 2) d1 = recv; else d0 = recv;
-                    // step 2: 16-bit interleave with the pair partner (lane ^ 1)
-                    const uint32_t o0 = __builtin_amdgcn_mov_dpp(d0, 0xb1, 0xf, 0xf, true); // [1,0,3,2]
-                    const uint32_t o1 = __builtin_amdgcn_mov_dpp(d1, 0xb1, 0xf, 0xf, true);
-                    // even: (lo(d), lo(o)); odd: (hi(o), hi(d))
-                    const uint32_t r0 = __builtin_amdgcn_perm(o0, d0, sel);
-                    const uint32_t r1 = __builtin_amdgcn_perm(o1, d1, sel);
+                    const uint32_t d0 = bit_cast<uint32_t>(ext_vector_t<bf16_t, 2>{
+                        type_convert<bf16_t>(v[number<0>{}]), type_convert<bf16_t>(v[number<1>{}])});
+                    const uint32_t d1 = bit_cast<uint32_t>(ext_vector_t<bf16_t, 2>{
+                        type_convert<bf16_t>(v[number<2>{}]), type_convert<bf16_t>(v[number<3>{}])});
                     *reinterpret_cast<CK_TILE_LDS_ADDR ext_vector_t<uint32_t, 2> *>(
                         lds + w_off + mi * 32 * kRowStride + ni * 32 * 2) =
-                        ext_vector_t<uint32_t, 2>{r0, r1};
+                        ext_vector_t<uint32_t, 2>{d0, d1};
                 });
             });
             block_sync_lds();
