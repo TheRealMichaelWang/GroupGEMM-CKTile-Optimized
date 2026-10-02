@@ -117,3 +117,4 @@ Tools: `scripts/quick.sh` (bf16-only tuning build, ~15 s + ~5 s run), `QUICK_ONL
   buffer scheme): correct, but needs ~448 registers; compiler uses all 512 + 104 B scratch and 84
   AGPR<->VGPR moves per loop -> ~600 TF. Single-buffered B fits but frees the LDS stage only
   mid-tile (= HAND, ~1035-1110).
+- RING with raw float4 accumulators + direct __builtin_amdgcn_mfma (layout verified correct): worse, 1464 B scratch / ~92 TF; -amdgpu-mfma-vgpr-form=0/1 no change.
