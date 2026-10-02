@@ -66,8 +66,28 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
     // B(kt+3) loads go in rows kBRow0 .. kBRow0+3 (kB3 only; otherwise rows 4-7)
     static constexpr index_t kBRow0 = kB3 ? TUNEMAX_B_ROW0 : 4;
     // B loads issued before the row-7 barrier, i.e. after A(kt+1)'s loads
+#ifndef TUNEMAX_LOAD_MODE
+#define TUNEMAX_LOAD_MODE 0
+#endif
+    // kLoadMode 1 (kB3 only): A(kt+1) 2 per row in rows 0-3 (after MFMAs 0, 8); B(kt+3) 1 per
+    // row in all 8 rows (after MFMA 11 in rows 0-3, MFMA 9 in rows 4-7): one memory op per gap
+    // and an even stream of loads. kLoadMode 0: A per kAPerRow, B 2 per row from kBRow0.
+    static constexpr index_t kLoadMode = kB3 ? TUNEMAX_LOAD_MODE : 0;
+#ifndef TUNEMAX_EARLY_A
+#define TUNEMAX_EARLY_A 2
+#endif
+    // kEarlyA (kLoadMode 0, kAPerRow 4): the first kEarlyA loads of A(kt+2) are issued in row 7
+    // of iteration kt, right after the barrier that frees their stage (after MFMAs 12, 14, 15).
+    static constexpr index_t kEarlyA = (kB3 && kAPerRow == 4) ? TUNEMAX_EARLY_A : 0;
+    // B load slot (MFMA index) in row r for kLoadMode 1
+    static constexpr index_t b1_idx(index_t r) { return r < 4 ? 11 : 9; }
     static constexpr index_t kBLoadsBeforeBar = [] {
         index_t n = 0;
+        if (kLoadMode == 1) { // B loads after the last A load (row 3, MFMA 8) and before the barrier
+            for (index_t r = 3; r < 8; ++r)
+                n += r < 7 ? 1 : (kBarIdx > b1_idx(7));
+            return n;
+        }
         for (index_t r = kBRow0; r < kBRow0 + 4; ++r)
             n += r < 7 ? 2 : (kBarIdx > kBOff) + (kBarIdx > 8 + kBOff);
         return n;
@@ -229,6 +249,7 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
         auto iteration = [&](index_t kt, auto buf, auto first, auto t3) {
             constexpr index_t s = buf; // stage of tile kt (buf == kt % 2)
             const auto rsrc_a = make_rsrc(min(kt + 1, num_loop - 1));
+            const auto rsrc_a2 = make_rsrc(min(kt + 2, num_loop - 1)); // early A(kt+2) loads
             const auto rsrc_b = make_rsrc(min(kt + 3, num_loop - 1));
             const index_t a_cur = a_base(s), a_nxt = a_base(s ^ 1);
             // B(kt+1) is pre-read from b_nxt; B(kt+3) is loaded into b_wr
@@ -255,10 +276,22 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
                     constexpr index_t a_slot =
                         kAPerRow == 2 ? (idx == 0 ? 0 : idx == 8 ? 1 : -1)
                                       : (idx == 0 ? 0 : idx == 5 ? 1 : idx == 8 ? 2 : idx == 13 ? 3 : -1);
-                    if constexpr (mi * kAPerRow < kLoads && a_slot >= 0)
-                        issue_load(rsrc_a, a_nxt, number<mi * kAPerRow + a_slot>{}, number<0>{});
+                    if constexpr (kLoadMode == 1) {
+                        if constexpr (mi < 4 && idx % 8 == 0)
+                            issue_load(rsrc_a, a_nxt, number<mi * 2 + idx / 8>{}, number<0>{});
+                        if constexpr (idx == b1_idx(mi))
+                            issue_load(rsrc_b, b_wr, number<mi>{}, number<1>{});
+                    } else {
+                    // loads j < kEarlyA were issued by the previous iteration (not by tile 0)
+                    constexpr index_t a_j = mi * kAPerRow + a_slot - (first ? 0 : kEarlyA);
+                    if constexpr (a_slot >= 0 && a_j >= 0 && a_j + (first ? 0 : kEarlyA) < kLoads)
+                        issue_load(rsrc_a, a_nxt, number<a_j + (first ? 0 : kEarlyA)>{}, number<0>{});
+                    constexpr index_t e_slot = idx == 12 ? 0 : idx == 14 ? 1 : idx == 15 ? 2 : -1;
+                    if constexpr (mi == 7 && e_slot >= 0 && e_slot < kEarlyA)
+                        issue_load(rsrc_a2, a_cur, number<e_slot>{}, number<0>{});
                     if constexpr (mi >= kBRow0 && mi < kBRow0 + 4 && idx % 8 == kBOff)
                         issue_load(rsrc_b, b_wr, number<(mi - kBRow0) * 2 + idx / 8>{}, number<1>{});
+                    }
                     // next A row (or next tile's row 0 in row 7) after MFMA 2 and 4
                     // memory ops: loads after even MFMAs, LDS reads after odd ones
                     if constexpr (mi + 1 < kMIter && (idx == 2 || idx == 4)) {
