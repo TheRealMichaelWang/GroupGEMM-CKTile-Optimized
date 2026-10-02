@@ -9,7 +9,8 @@
 //      (row stride 528 B, conflict free);
 //   3. one barrier, then each wave streams 64 full rows (512 B) out with ds_read_b128 +
 //      buffer_store_dwordx4, with the chosen cache policy.
-// Padded instances, atomic (split-K) windows and other dtypes fall back to the base epilogue.
+// Padded instances mask rows past M (bounded buffer resource) and columns past N (CK's
+// padded-view validity check). fp16 falls back to the base epilogue; bf16 split-K is unsupported.
 #pragma once
 
 #include "ck_tile/core.hpp"
@@ -31,10 +32,14 @@ struct FastEpilogue : public BaseEpilogue {
         using namespace ck_tile;
         using View = remove_cvref_t<decltype(c_window.get_bottom_tensor_view())>;
         using CData = remove_cvref_t<typename View::DataType>;
-        if constexpr (Pad || View::DstInMemOp != memory_operation_enum::set ||
-                      !std::is_same_v<CData, bf16_t>) {
+        if constexpr (!std::is_same_v<CData, bf16_t>) {
+            // fp16: the pipeline keeps CK's C layout, CK's epilogue stores it
             auto c_win = with_store_mode<Mode>(c_window);
             return BaseEpilogue::operator()(c_win, c_tile, d_windows, smem);
+        } else if constexpr (View::DstInMemOp != memory_operation_enum::set) {
+            // bf16 accumulators hold C^T tiles, which CK's (split-K atomic) epilogue cannot take.
+            // The tunemax backend always launches k_batch = 1.
+            __builtin_trap();
         } else {
             // C tile Y dims: (MIter, NIter, per-MFMA-tile dims...), as CK's block GEMM lays it out
             constexpr auto y_lengths = to_sequence(
@@ -77,12 +82,24 @@ struct FastEpilogue : public BaseEpilogue {
             const auto &desc = view.get_tensor_descriptor();
             const index_t ldc = desc.calculate_offset(make_multi_index(1, 0)) -
                                 desc.calculate_offset(make_multi_index(0, 0));
-            const CData *c_ptr =
-                view.get_buffer_view().p_data_ + desc.calculate_offset(c_window.get_window_origin());
-            const auto rsrc = cast_to_amdgpu_buffer_rsrc_t(
-                make_wave_buffer_resource(c_ptr, 0x7ffff000));
+            const auto origin  = c_window.get_window_origin();
+            const index_t o_off = desc.calculate_offset(origin);
+            const CData *c_ptr  = view.get_buffer_view().p_data_ + o_off;
+            // Bounded to the end of C: rows past M fall outside and are dropped.
+            const index_t c_bytes =
+                (static_cast<index_t>(view.get_buffer_view().buffer_size_) - o_off) * 2;
+            const auto rsrc = cast_to_amdgpu_buffer_rsrc_t(make_wave_buffer_resource(c_ptr, c_bytes));
             const index_t r_row = wave * 64 + lane / 32, chunk = lane % 32;
-            const index_t g_off = (r_row * ldc + chunk * 8) * 2;
+            // Columns past N (padded instances): a lane's 8 columns are fixed for the whole tile; a
+            // lane whose chunk is outside C (CK's padded-view validity check) stores to an offset
+            // past the buffer, which is dropped. Chunks never straddle N: CK's IsSupportedArgument
+            // requires N % 8 == 0 for this C.
+            bool chunk_ok = true;
+            if constexpr (Pad)
+                chunk_ok = coordinate_has_valid_offset_assuming_top_index_is_valid(
+                    desc, make_tensor_coordinate(
+                              desc, make_multi_index(origin[0], origin[1] + chunk * 8 + 7)));
+            const index_t g_off = chunk_ok ? (r_row * ldc + chunk * 8) * 2 : 0x7f000000;
             const index_t l_off = r_row * kRowStride + chunk * 16;
             // batches of 16 LDS reads, then 16 stores (registers are free after the main loop)
             using U4 = ext_vector_t<uint32_t, 4>;

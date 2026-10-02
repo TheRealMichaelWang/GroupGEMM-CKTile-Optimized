@@ -45,11 +45,10 @@ struct HandPipelineAsmS : public GemmPipelineAgBgCrCompV3<Problem> {
 #define TUNEMAX_A_PER_ROW 4
 #endif
     static constexpr index_t kAPerRow = TUNEMAX_A_PER_ROW;
-    // Unpadded instances (whose C goes through tunemax::FastEpilogue) compute C^T per MFMA tile
+    // bf16 instances (whose C goes through tunemax::FastEpilogue) compute C^T per MFMA tile
     // (operands swapped): each lane then holds 4 consecutive columns of one row, which the
-    // epilogue stores without a transpose. Padded instances keep CK's C layout.
-    static constexpr bool kTransposedAcc = !Problem::kPadM && !Problem::kPadN && !Problem::kPadK &&
-                                           std::is_same_v<ADataType, bf16_t>;
+    // epilogue stores without a transpose. fp16 keeps CK's C layout for CK's epilogue.
+    static constexpr bool kTransposedAcc = std::is_same_v<ADataType, bf16_t>;
 #ifndef TUNEMAX_B_OFF
 #define TUNEMAX_B_OFF 1
 #endif
