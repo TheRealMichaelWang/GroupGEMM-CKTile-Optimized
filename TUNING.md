@@ -118,3 +118,37 @@ Tools: `scripts/quick.sh` (bf16-only tuning build, ~15 s + ~5 s run), `QUICK_ONL
   AGPR<->VGPR moves per loop -> ~600 TF. Single-buffered B fits but frees the LDS stage only
   mid-tile (= HAND, ~1035-1110).
 - RING with raw float4 accumulators + direct __builtin_amdgcn_mfma (layout verified correct): worse, 1464 B scratch / ~92 TF; -amdgpu-mfma-vgpr-form=0/1 no change.
+
+## Round 5 (2026-10-02): HandPipelineAsmS -> ~1555 TFLOPS top3 (hipblaslt_loop ~1427)
+Pipeline `ck_kernel/hand_pipeline_asm_s.hpp` (config key ASMS) + `ck_kernel/fast_epilogue.hpp`,
+persistent GroupedGemmKernel. Metric used while tuning: `scripts/att.sh` (thread trace of one CU,
+Kimi-K2) prints cycles per wave-tile (ideal 229376 = 14336 MFMAs x 16) - far less noisy than the
++-10 TFLOPS run-to-run spread of the benchmark. Steps (mean top3 TFLOPS / cycles per tile):
+- Explicit schedule: sched_barrier after every MFMA and at most one memory op per MFMA gap;
+  end-of-tile barrier moved into row 7 with the next tile's A row 0 read right after it: 1393 -> 1431.
+  Barrier position in row 7 (MFMA 11) -> ~1443.
+- FastEpilogue (C via LDS: ds_write_b64 + full-row buffer_store_dwordx4 NT, one barrier) instead of
+  CShuffle (2-byte LDS writes, a barrier per round, ~22k cycles/tile): -> ~1505-1513.
+  16-byte-aligned LDS row stride (528 B; 520 B made every ds_read_b128 misaligned, 136 cycles).
+- K step via the buffer instruction's soffset (fixed resources, no per-iteration rebuild, no spill).
+- Swapped MFMA operands in unpadded bf16 instances (C^T per tile): each lane holds 4 consecutive
+  columns of a row, so the epilogue needs no DPP transpose: ~1535.
+- Peeled tile 0 initializes the accumulators with C=0 MFMAs (no 256 v_accvgpr_write).
+- kB3: B gets a third LDS buffer (A 2 x 32 KB + B 3 x 32 KB = 160 KB), so B(kt+3) can be loaded
+  anywhere in iteration kt and only one barrier per iteration remains; loop unrolled x6 so all
+  stage/buffer offsets are constants (a dynamic kt%3 cost ~70 cycles/iteration): 251.5k cycles/tile,
+  ~1541.
+- Persistent kernel: removes ~10k cycles/tile of workgroup turnaround: ~1557. Volatile-asm lane id
+  keeps lane-derived values from being hoisted out of the tile loop and spilled.
+- Counters (DS-V4 48 groups): MFMA busy / CU busy = 3.62 (90.6%), LDS bank conflicts 1.7%,
+  ~1695 MHz at 1400 W (hipBLASLt: ~90% at ~1560 MHz).
+Where the remaining ~22k cycles/tile (9%) go: main loop 16.6-16.7 cycles/MFMA (row-7 barrier skew
+~25 cycles/iteration, A-load issue stalls ~35/iteration); tile boundary ~12k: 32 C stores + the
+next tile's 24 prologue loads serialize on the CU's vector-memory path (~35 B/clk/CU, ~100-150
+cycles per 1 KB instruction), plus accumulator reads/conversion ~2k.
+Tried without gain: 32x32x16 MFMA variant (1228), triple-buffered A (1371), B loads at other
+slots (collisions with LDS reads in the same MFMA gap cost up to 50 TFLOPS), XCD remap / partitioner
+GroupNum 4/16 (CK's spatially-local order already gives 12 unique blocks per 32 tiles per XCD, the
+optimum), default vs NT C stores (same), direct 8-byte C stores without LDS (+22k cycles), epilogue
+halves interleaving stores with staging (same), staggering workgroups (stores are CU-bound, not
+GPU-bound), moving B1/B2 prologue loads into tile 0 (same).

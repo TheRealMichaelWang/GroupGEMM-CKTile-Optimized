@@ -50,6 +50,9 @@ many times slower (256x256 tiles spill ~400-700 with this compiler).
   `hipblaslt_grouped` is N/A in bf16. Use `--dtype fp16` for the 3-way comparison.
   Its default heuristic picks a 16x16 tile for these shapes (~90 TFLOPS), which also makes
   fp16 runs slow (~4 min for top3). Use `--backends ck_tile,hipblaslt_loop` to skip it.
-- Current best, top3 bf16: ck_tile (CK eight-wave async pipeline, 256x256x64, non-persistent)
-  ~1405 TFLOPS vs hipblaslt_loop ~1420 (power-capped at 1400 W). Tuning history and ideas: `TUNING.md`; quick loop:
-  `scripts/quick.sh`, config sweeps: `scripts/sweep.sh`.
+- Current best, top3 bf16: ck_tile ~1555 TFLOPS (1540-1570 per shape) vs hipblaslt_loop ~1427,
+  both at the 1400 W power cap. Pipeline: `ck_kernel/hand_pipeline_asm_s.hpp` (HandPipelineAsmS:
+  hand-scheduled 4-wave 256x256x64 main loop, inline-asm MFMAs, async global->LDS loads) inside
+  `ck_tile::GroupedGemmKernel` (persistent), C stored by `ck_kernel/fast_epilogue.hpp`. CK itself
+  is unmodified. Tuning history: `TUNING.md`; quick loop: `scripts/quick.sh`; per-tile cycle
+  breakdown from a thread trace: `scripts/att.sh` (+ `scripts/att_rows.py`).
