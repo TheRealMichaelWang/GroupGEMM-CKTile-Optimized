@@ -51,6 +51,7 @@ struct HandPipeline : public GemmPipelineAgBgCrCompV3<Problem> {
     static constexpr index_t kTileBytes  = kM * kRowBytes;   // 32 KB per operand
     static constexpr index_t kStageBytes = 2 * kTileBytes;   // A + B
     static constexpr index_t kLoadsPerOp = kTileBytes / (4 * 64 * 16); // 8 per wave per operand
+    static_assert(kLoadsPerOp == kMIter, "one A+B load pair is issued per MFMA row");
 
     CK_TILE_HOST_DEVICE static constexpr index_t GetSmemSize() { return 2 * kStageBytes; }
 
@@ -91,23 +92,27 @@ struct HandPipeline : public GemmPipelineAgBgCrCompV3<Problem> {
         // lane l writes 16 B at physical chunk l%8 of row l/8, i.e. logical chunk (l%8)^(l/8).
         const index_t ld_row   = lane / 8;
         const index_t ld_chunk = (lane % 8) ^ ld_row;
+        // One A and one B load (index j) of tile kt into stage. CK's direct global->LDS load
+        // (buffer_load ... lds): M0 = wave-uniform LDS address, lane l lands at M0 + l*16. The
+        // compiler does not see these loads; the explicit vmcnt waits are the synchronization.
+        // Row offset of load j lives in the (scalar) buffer descriptor, so every load of an
+        // operand shares one per-lane VGPR offset: lane l -> row (wave*8 + l/8) of the 32-row
+        // group, 16-byte chunk (l%8)^(l/8).
+        const index_t voff_a = ((wave * 8 + ld_row) * lda + ld_chunk * 8) * 2;
+        const index_t voff_b = ((wave * 8 + ld_row) * ldb + ld_chunk * 8) * 2;
+        auto issue_load_pair = [&](index_t kt, index_t stage, auto j) {
+            __builtin_amdgcn_sched_barrier(0); // keep each pair where it is placed in the MFMA stream
+            const auto ra = make_wave_buffer_resource(a_ptr + kt * kK + j * 32 * lda, 0x7ffff000);
+            const auto rb = make_wave_buffer_resource(b_ptr + kt * kK + j * 32 * ldb, 0x7ffff000);
+            const index_t stage_base = lds_base + stage * kStageBytes + (j * 4 + wave) * 1024;
+            m0_set_with_memory(stage_base);
+            async_buffer_load_dwordxn_v<4>(p_smem, ra, voff_a, 0, 0);
+            m0_set_with_memory(stage_base + kTileBytes);
+            async_buffer_load_dwordxn_v<4>(p_smem, rb, voff_b, 0, 0);
+            __builtin_amdgcn_sched_barrier(0);
+        };
         auto issue_tile = [&](index_t kt, index_t stage) {
-            // CK's direct global->LDS load (buffer_load ... lds): M0 = wave-uniform LDS address,
-            // lane l lands at M0 + l*16. The compiler does not see these loads, so the explicit
-            // vmcnt waits (block_sync_lds_direct_load) are the only synchronization.
-            const auto ra = make_wave_buffer_resource(a_ptr + kt * kK, 0x7ffff000);
-            const auto rb = make_wave_buffer_resource(b_ptr + kt * kK, 0x7ffff000);
-            const index_t stage_base = lds_base + stage * kStageBytes;
-            static_for<0, kLoadsPerOp, 1>{}([&](auto j) {
-                const index_t row = (j * 4 + wave) * 8 + ld_row;
-                m0_set_with_memory(stage_base + (j * 4 + wave) * 1024);
-                async_buffer_load_dwordxn_v<4>(p_smem, ra, (row * lda + ld_chunk * 8) * 2, 0, 0);
-            });
-            static_for<0, kLoadsPerOp, 1>{}([&](auto j) {
-                const index_t row = (j * 4 + wave) * 8 + ld_row;
-                m0_set_with_memory(stage_base + kTileBytes + (j * 4 + wave) * 1024);
-                async_buffer_load_dwordxn_v<4>(p_smem, rb, (row * ldb + ld_chunk * 8) * 2, 0, 0);
-            });
+            static_for<0, kLoadsPerOp, 1>{}([&](auto j) { issue_load_pair(kt, stage, j); });
         };
 
         // --- LDS -> registers. Fragment (iter i, k-half kh): row (i*2+w)*16 + lane%16, logical
@@ -138,8 +143,9 @@ struct HandPipeline : public GemmPipelineAgBgCrCompV3<Problem> {
 
         auto c_block = BlockGemm::MakeCBlockTile();
         clear_tile(c_block);
-        auto mfma = [&](auto buf) {
+        auto mfma = [&](auto buf, auto &&per_row) {
             static_for<0, kMIter, 1>{}([&](auto mi) {
+                per_row(mi);
                 static_for<0, kNIter, 1>{}([&](auto ni) {
                     CWarpTensor c_w;
                     c_w.get_thread_buffer() = c_block.get_y_sliced_thread_data(
@@ -163,18 +169,27 @@ struct HandPipeline : public GemmPipelineAgBgCrCompV3<Problem> {
             block_sync_lds_direct_load<0>();
         read_frags(0, 0, number<0>{});
 
-        // --- main loop
+        // --- main loop (branch-free body: branches around the MFMA blocks wreck register
+        // allocation). In the last two iterations the "next" loads/reads are clamped to the
+        // last tile; they hit a stage that is never read again, so they are harmless.
         for (index_t kt = 0; kt < num_loop; ++kt) {
-            const index_t s = kt & 1;
-            read_frags(s, 1, number<1>{});   // a)
-            mfma(number<0>{});               // b)
-            block_sync_lds_direct_load<0>(); // c) tile kt+1 landed; stage s fully read
-            if (kt + 2 < num_loop)
-                issue_tile(kt + 2, s);       // d)
-            if (kt + 1 < num_loop)
-                read_frags(s ^ 1, 0, number<0>{}); // e)
-            mfma(number<1>{});               // f)
+            const index_t s       = kt & 1;
+            const index_t kt_load = min(kt + 2, num_loop - 1);
+            read_frags(s, 1, number<1>{});          // a)
+            mfma(number<0>{}, [](auto) {});         // b)
+            block_sync_lds_direct_load<0>();        // c) tile kt+1 landed; stage s fully read
+            read_frags(s ^ 1, 0, number<0>{});      // e)
+            // f)+d): two load pairs before each of the first 4 MFMA rows -- early enough to land
+            // before the next barrier, spread enough not to clog the vector-memory queue.
+            mfma(number<1>{}, [&](auto mi) {
+                if constexpr (mi < kLoadsPerOp / 2) {
+                    issue_load_pair(kt_load, s, number<2 * mi>{});
+                    issue_load_pair(kt_load, s, number<2 * mi + 1>{});
+                }
+            });
         }
+        // Drain the clamped loads before the epilogue reuses LDS.
+        block_sync_lds_direct_load<0>();
         return c_block;
     }
 

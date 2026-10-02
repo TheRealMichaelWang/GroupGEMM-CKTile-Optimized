@@ -12,12 +12,16 @@
 #include "xor_async_policy.hpp"
 #include "swizzled_lds_policy.hpp"
 #include "hand_pipeline.hpp"
+#include "hand_pipeline_k32.hpp"
 #include "swizzled_lds_policy.hpp"
 #include "hand_pipeline.hpp"
+#include "hand_pipeline_k32.hpp"
 #include "swizzled_lds_policy.hpp"
 #include "hand_pipeline.hpp"
+#include "hand_pipeline_k32.hpp"
 #include "swizzled_lds_policy.hpp"
 #include "hand_pipeline.hpp"
+#include "hand_pipeline_k32.hpp"
 #include "coherence_epilogue.hpp"
 
 namespace tunemax {
@@ -31,7 +35,7 @@ struct CkTileConfig {
     // bigger than 256x256x64 (LDS / registers). See TUNING.md for everything tried.
     static constexpr ck_tile::index_t M_Tile = 256;
     static constexpr ck_tile::index_t N_Tile = 256;
-    static constexpr ck_tile::index_t K_Tile = 64;
+    static constexpr ck_tile::index_t K_Tile = 32;
 
     // Warps per block in M, N, K (block size = product * 64 threads).
     static constexpr ck_tile::index_t M_Warp = 2;
@@ -47,7 +51,7 @@ struct CkTileConfig {
     // Pipeline and its scheduler. Other options in ck_tile/ops/gemm.hpp include
     // GemmPipelineAgBgCrCompV4 (set DoubleSmemBuffer = true) and GemmPipelineAgBgCrMem.
     template <typename Problem>
-    using Pipeline = tunemax::HandPipeline<Problem>;
+    using Pipeline = tunemax::HandPipelineK32<Problem>;
     static constexpr auto Scheduler        = ck_tile::GemmPipelineScheduler::Intrawave;
     // Preshuffle: B (weights) pre-arranged so the pipeline loads it straight to registers.
     // Needs Pipeline = ck_tile::WeightPreshufflePipelineAGmemBGmemCRegV2 and shuffled weights.
